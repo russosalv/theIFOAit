@@ -1,20 +1,14 @@
-﻿@namespace IFOA.Blazor.Components.CareerTimeLine
+﻿@using IFOA.Blazor.Definition.Dtos
+@namespace IFOA.Blazor.Components.CareerTimeLine
 
 <IFOACareerTimeLineItem
     Color="Color.Secondary"
     Icon="@Icons.Material.Filled.School"
-    Date="@Date"
-    HeaderText="@CompanyName"
-    HeaderSubText="@JobTitle"
-    Text="@JobSummary"
-    DetailLink="@DetailLink"
+    Data="@Data"
     DetailLinkColor="Color.Secondary"
 />
 
 @code {
-    [Parameter] public string Date { get; set; } = "2019";
-    [Parameter] public string CompanyName { get; set; } = "School Name";
-    [Parameter] public string JobTitle { get; set; } = "Graduated";
-    [Parameter] public string JobSummary { get; set; } = "School Summary";
-    [Parameter] public string DetailLink { get; set; } = "/";
+    [Parameter]
+    public CareerTimeLineData Data { get; set; } = new CareerTimeLineData(); 
 }

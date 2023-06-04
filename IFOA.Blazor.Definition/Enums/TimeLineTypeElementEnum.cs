@@ -2,7 +2,7 @@
 
 public enum TimeLineTypeElementEnum
 {
-    Business = 1,
-    School = 2,
-    Project = 3,
+    Certifications = 100,
+    Experiences = 200,
+    Projects = 300,
 }

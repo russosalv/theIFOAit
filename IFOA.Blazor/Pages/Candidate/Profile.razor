@@ -1,5 +1,7 @@
 ﻿@page "/candidate-profile"
 @using IFOA.Blazor.Components.CareerTimeLine
+@using IFOA.Blazor.Definition.Dtos
+@using IFOA.Blazor.Definition.Enums
 @inject NavigationManager Navigation
 
 <MudFab Style="position:fixed; bottom:15px; right:15px; z-index: 100" Color=@Color.Secondary Icon=@Icons.Material.Filled.Edit/>
@@ -11,8 +13,8 @@
         <MudCard Style="height: 330px">
             <MudCardMedia Image="https://dummyimage.com/200" Height="200"/>
             <MudCardContent>
-                <MudText Typo="Typo.h5">Name Surname</MudText>
-                <MudText Typo="Typo.body2">Job description</MudText>
+                <MudText Typo="Typo.h5">Salvatore Alessandro Russo</MudText>
+                <MudText Typo="Typo.body2">Software Architect</MudText>
                 <MudText Typo="Typo.body2">Bio bla bla bla bla bla bla bla ...</MudText>
                 <MudRating ReadOnly="true" SelectedValue="4"/>
             </MudCardContent>
@@ -47,7 +49,9 @@
                 <MudItem xs="12" md="8">
                     <MudField Label="Email" Variant="Variant.Text"
                               Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Email" AdornmentColor="Color.Primary"
-                              OnAdornmentClick="() => MailTo()"> russosalv@gmail.com</MudField>
+                              OnAdornmentClick="() => MailTo()">
+                        russosalv@gmail.com
+                    </MudField>
                 </MudItem>
 
             </MudCardContent>
@@ -81,8 +85,8 @@
     </MudItem>
 
     <!-- Carrer Timeline -->
-    <IFOACareerTimeLine>
-    </IFOACareerTimeLine>
+    <IFOACareerTimeLine CareerTimeLineData="@_careerTimeLineDatas"/>s
+
 
 </MudGrid>
 
@@ -97,5 +101,97 @@
     {
         Navigation.NavigateTo($"callTo:+393484224991");
     }
+
+    private List<CareerTimeLineData> _careerTimeLineDatas = new List<CareerTimeLineData>()
+    {
+        new CareerTimeLineData()
+        {
+            Type = TimeLineTypeElementEnum.Certifications,
+            FromDate = new DateTimeOffset(2001, 01, 1, 0, 0, 0, TimeSpan.Zero),
+            ToDate = new DateTimeOffset(2006, 7, 1, 0, 0, 0, TimeSpan.Zero),
+            Title = "High School",
+            SubTitle = "ITN Nino Bixio",
+        },
+        new CareerTimeLineData()
+        {
+            Type = TimeLineTypeElementEnum.Experiences,
+            FromDate = new DateTimeOffset(2006, 08, 1, 0, 0, 0, TimeSpan.Zero),
+            ToDate = new DateTimeOffset(2010, 08, 1, 0, 0, 0, TimeSpan.Zero),
+            Title = "Grimaldi Group",
+            SubTitle = "Officer",
+        },
+        new CareerTimeLineData()
+        {
+            Type = TimeLineTypeElementEnum.Projects,
+            FromDate = new DateTimeOffset(2006, 08, 1, 0, 0, 0, TimeSpan.Zero),
+            ToDate = new DateTimeOffset(2007, 08, 1, 0, 0, 0, TimeSpan.Zero),
+            Title = "Deck Cadet",
+            SubTitle = "MV Repubblica Argentina",
+        },
+        new CareerTimeLineData()
+        {
+            Type = TimeLineTypeElementEnum.Projects,
+            FromDate = new DateTimeOffset(2007, 10, 1, 0, 0, 0, TimeSpan.Zero),
+            ToDate = new DateTimeOffset(2008, 04, 1, 0, 0, 0, TimeSpan.Zero),
+            Title = "3rd Officer",
+            SubTitle = "MV Grande Benelux",
+        },
+        new CareerTimeLineData()
+        {
+            Type = TimeLineTypeElementEnum.Projects,
+            FromDate = new DateTimeOffset(2008, 6, 1, 0, 0, 0, TimeSpan.Zero),
+            ToDate = new DateTimeOffset(2008, 10, 1, 0, 0, 0, TimeSpan.Zero),
+            Title = "2nd Officer - 3rd Engineer",
+            SubTitle = "MV Repubblica di Genova",
+        },
+        new CareerTimeLineData()
+        {
+            Type = TimeLineTypeElementEnum.Projects,
+            FromDate = new DateTimeOffset(2008, 10, 1, 0, 0, 0, TimeSpan.Zero),
+            ToDate = new DateTimeOffset(2009, 06, 1, 0, 0, 0, TimeSpan.Zero),
+            Title = "2nd Officer - 3rd Engineer",
+            SubTitle = "Mv EuroShattle Valencia",
+        },
+        new CareerTimeLineData()
+        {
+            Type = TimeLineTypeElementEnum.Certifications,
+            FromDate = new DateTimeOffset(2010, 9, 1, 0, 0, 0, TimeSpan.Zero),
+            ToDate = new DateTimeOffset(2015, 01, 1, 0, 0, 0, TimeSpan.Zero),
+            Title = "Hardware and Software Engineering",
+            SubTitle = "University of Naples Parthenope",
+        },
+        new CareerTimeLineData()
+        {
+            Type = TimeLineTypeElementEnum.Experiences,
+            FromDate = new DateTimeOffset(2015, 2, 1, 0, 0, 0, TimeSpan.Zero),
+            ToDate = new DateTimeOffset(2015, 12, 1, 0, 0, 0, TimeSpan.Zero),
+            Title = "Solari di Udine",
+            SubTitle = "Software Developer",
+        },
+        new CareerTimeLineData()
+        {
+            Type = TimeLineTypeElementEnum.Experiences,
+            FromDate = new DateTimeOffset(2016, 2, 1, 0, 0, 0, TimeSpan.Zero),
+            ToDate = new DateTimeOffset(2019, 12, 1, 0, 0, 0, TimeSpan.Zero),
+            Title = "SpecTec",
+            SubTitle = "Software Architect",
+        },
+        new CareerTimeLineData()
+        {
+            Type = TimeLineTypeElementEnum.Experiences,
+            FromDate = new DateTimeOffset(2019, 12, 1, 0, 0, 0, TimeSpan.Zero),
+            ToDate = new DateTimeOffset(2022, 08, 1, 0, 0, 0, TimeSpan.Zero),
+            Title = "Capgemini",
+            SubTitle = "Azure Architect",
+        },
+        new CareerTimeLineData()
+        {
+            Type = TimeLineTypeElementEnum.Experiences,
+            FromDate = new DateTimeOffset(2022, 08, 1, 0, 0, 0, TimeSpan.Zero),
+            ToDate = new DateTimeOffset(9999, 08, 1, 0, 0, 0, TimeSpan.Zero),
+            Title = "Blastness",
+            SubTitle = "Azure Architect",
+        },
+    };
 
 }

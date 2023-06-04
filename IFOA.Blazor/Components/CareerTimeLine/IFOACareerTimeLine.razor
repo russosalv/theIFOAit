@@ -1,5 +1,6 @@
 ﻿@namespace IFOA.Blazor.Components.CareerTimeLine
 @using IFOA.Blazor.Components.CareerTimeLine
+@using IFOA.Blazor.Definition.Dtos
 @using IFOA.Blazor.Definition.Enums
 
 <MudItem xs="12">
@@ -11,25 +12,36 @@
         </MudCardHeader>
         <MudCardContent>
             <MudItem xs="12" sm="5">
-                <MudSelect 
-                    T="TimeLineTypeElementEnum" 
-                    Label="View" 
+                <MudSelect
+                    T="TimeLineTypeElementEnum"
+                    Label="View"
                     Placeholder="All"
                     Dense="true" MultiSelection="true"
                     Variant="Variant.Outlined"
                     @bind-SelectedValues="_selectedTimeLineTypeElementEnum">
-                    <MudSelectItem T="TimeLineTypeElementEnum" Value="TimeLineTypeElementEnum.Business">Business</MudSelectItem>
-                    <MudSelectItem T="TimeLineTypeElementEnum" Value="TimeLineTypeElementEnum.School">Study</MudSelectItem>
-                    <MudSelectItem T="TimeLineTypeElementEnum" Value="TimeLineTypeElementEnum.Project">Project</MudSelectItem>
+                    <MudSelectItem T="TimeLineTypeElementEnum" Value="TimeLineTypeElementEnum.Experiences">Experiences</MudSelectItem>
+                    <MudSelectItem T="TimeLineTypeElementEnum" Value="TimeLineTypeElementEnum.Certifications">Certifications</MudSelectItem>
+                    <MudSelectItem T="TimeLineTypeElementEnum" Value="TimeLineTypeElementEnum.Projects">Projects</MudSelectItem>
                 </MudSelect>
             </MudItem>
             <MudTimeline TimelinePosition="_timelinePosition">
-                <IFOACarrerTimeLineItemBusiness/>
-                <IFOACarrerTimeLineItemProject/>
-                <IFOACarrerTimeLineItemBusiness/>
-                <IFOACarrerTimeLineItemStudy/>
-                <IFOACareerTimeLineItem/>
-                <IFOACareerTimeLineItem/>
+                @foreach (var item in PopulateTimeLine())
+                {
+                    switch (item.Type)
+                    {
+                        case TimeLineTypeElementEnum.Experiences:
+                            <IFOACarrerTimeLineItemBusiness Data="item"/>
+                            break;
+                        case TimeLineTypeElementEnum.Certifications:
+                            <IFOACarrerTimeLineItemStudy Data="item"/>
+                            break;
+                        case TimeLineTypeElementEnum.Projects:
+                            <IFOACarrerTimeLineItemProject Data="item"/>
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                }
             </MudTimeline>
         </MudCardContent>
     </MudCard>
@@ -37,10 +49,11 @@
 
 @code {
     private IEnumerable<TimeLineTypeElementEnum> _selectedTimeLineTypeElementEnum = new HashSet<TimeLineTypeElementEnum>();
-    
+
     private TimelinePosition _timelinePosition = TimelinePosition.Alternate;
-    
-    [Inject] IJSRuntime JSRuntime { get; set; }
+
+    [Inject]
+    IJSRuntime JSRuntime { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -58,4 +71,21 @@
         public int Width { get; set; }
         public int Height { get; set; }
     }
+
+    [Parameter]
+    public List<CareerTimeLineData> CareerTimeLineData { get; set; } = new List<CareerTimeLineData>();
+
+    private List<CareerTimeLineData> PopulateTimeLine()
+    {
+        var data = CareerTimeLineData
+            .OrderByDescending(x => x.FromDate)
+            .ThenByDescending(x => x.Type)
+            .ToList();
+
+        if (_selectedTimeLineTypeElementEnum.Any())
+            data = data.Where(x => _selectedTimeLineTypeElementEnum.Contains(x.Type)).ToList();
+
+        return data;
+    }
+
 }
