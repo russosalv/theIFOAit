@@ -1,26 +1,83 @@
 ﻿@page "/candidate-profile"
 @using IFOA.Blazor.Components.CareerTimeLine
+@inject NavigationManager Navigation
 
-<MudFab Style="position:fixed; bottom:15px; right:15px" Color=@Color.Secondary Icon=@Icons.Material.Filled.Edit/>
+<MudFab Style="position:fixed; bottom:15px; right:15px; z-index: 100" Color=@Color.Secondary Icon=@Icons.Material.Filled.Edit/>
 
 <MudGrid>
     <!-- Drawer -->
     <MudItem lg="4" xs="12">
 
-        <MudCard>
+        <MudCard Style="height: 330px">
             <MudCardMedia Image="https://dummyimage.com/200" Height="200"/>
             <MudCardContent>
                 <MudText Typo="Typo.h5">Name Surname</MudText>
                 <MudText Typo="Typo.body2">Job description</MudText>
                 <MudText Typo="Typo.body2">Bio bla bla bla bla bla bla bla ...</MudText>
-                <MudRating SelectedValue="4"/>
+                <MudRating ReadOnly="true" SelectedValue="4"/>
             </MudCardContent>
         </MudCard>
     </MudItem>
 
     <!-- Main Content -->
-    <MudItem lg="8" xs="12">
-        <MudPaper Class="d-flex align-center justify-center mud-width-full py-8">xs=6</MudPaper>
+    <MudItem lg="4" xs="12">
+        <MudCard Style="height: 330px">
+            <MudCardHeader>
+                <MudText Typo="Typo.h6">Personal Info</MudText>
+            </MudCardHeader>
+            <MudCardContent>
+
+                <MudItem xs="12" md="8">
+                    <MudField Label="Day of Birth" Variant="Variant.Text">10-Oct-1986</MudField>
+                </MudItem>
+
+                <MudItem xs="12" md="8">
+                    <MudField Label="Age" Variant="Variant.Text">37 y.o.</MudField>
+                </MudItem>
+
+                <MudItem xs="12" md="8">
+                    <MudField Label="Phone Number"
+                              Variant="Variant.Text"
+                              Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Phone" AdornmentColor="Color.Primary"
+                              OnAdornmentClick="() => CallTo()">
+                        +39 3484224991
+                    </MudField>
+                </MudItem>
+
+                <MudItem xs="12" md="8">
+                    <MudField Label="Email" Variant="Variant.Text"
+                              Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Email" AdornmentColor="Color.Primary"
+                              OnAdornmentClick="() => MailTo()"> russosalv@gmail.com</MudField>
+                </MudItem>
+
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+
+    <MudItem lg="4" xs="12">
+        <MudCard Style="height: 330px">
+            <MudCardHeader>
+                <MudText Typo="Typo.h6">Residency Info</MudText>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudItem xs="12" md="8">
+                    <MudField Label="Country of Residence" Variant="Variant.Text">Italy</MudField>
+                </MudItem>
+
+                <MudItem xs="12" md="8">
+                    <MudField Label="Nationality" Variant="Variant.Text">Italian</MudField>
+                </MudItem>
+
+                <MudItem xs="12" md="8">
+                    <MudField Label="Address" Variant="Variant.Text">Via San.Martino 45a</MudField>
+                </MudItem>
+
+                <MudItem xs="12" md="8">
+                    <MudField Label="City" Variant="Variant.Text">La Spezia</MudField>
+                </MudItem>
+
+            </MudCardContent>
+        </MudCard>
     </MudItem>
 
     <!-- Carrer Timeline -->
@@ -30,5 +87,15 @@
 </MudGrid>
 
 @code {
+
+    private void MailTo()
+    {
+        Navigation.NavigateTo($"mailto:russosalv@gmail.com");
+    }
+
+    private void CallTo()
+    {
+        Navigation.NavigateTo($"callTo:+393484224991");
+    }
 
 }

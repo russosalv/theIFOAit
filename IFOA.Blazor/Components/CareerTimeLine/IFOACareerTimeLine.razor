@@ -23,7 +23,7 @@
                     <MudSelectItem T="TimeLineTypeElementEnum" Value="TimeLineTypeElementEnum.Project">Project</MudSelectItem>
                 </MudSelect>
             </MudItem>
-            <MudTimeline>
+            <MudTimeline TimelinePosition="_timelinePosition">
                 <IFOACarrerTimeLineItemBusiness/>
                 <IFOACarrerTimeLineItemProject/>
                 <IFOACarrerTimeLineItemBusiness/>
@@ -37,4 +37,25 @@
 
 @code {
     private IEnumerable<TimeLineTypeElementEnum> _selectedTimeLineTypeElementEnum = new HashSet<TimeLineTypeElementEnum>();
+    
+    private TimelinePosition _timelinePosition = TimelinePosition.Alternate;
+    
+    [Inject] IJSRuntime JSRuntime { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        var dimension = await JSRuntime.InvokeAsync<WindowDimension>("getWindowDimensions");
+
+        if (dimension.Width < 560)
+        {
+            _timelinePosition = TimelinePosition.Left;
+            StateHasChanged();
+        }
+    }
+
+    private class WindowDimension
+    {
+        public int Width { get; set; }
+        public int Height { get; set; }
+    }
 }

@@ -1,15 +1,19 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider />
+<MudThemeProvider @bind-IsDarkMode="@IsDark" Theme="_theme"/>
 <MudDialogProvider />
 <MudSnackbarProvider />
 
 <MudLayout>
     <MudAppBar Elevation="1">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-        <MudText Typo="Typo.h5" Class="ml-3">The IFOA</MudText>
+        <MudImage Src="ifoa-logoweb.png" Alt="Mony the dog" Elevation="25" Class="rounded-lg"/>
+        @* <MudText Typo="Typo.h5" Class="ml-3">The IFOA</MudText> *@
         <MudSpacer />
         <MudIconButton Icon="@Icons.Material.Filled.Language" Color="Color.Inherit" Link="https://theifoa.com/" Target="_blank" />
+        <MudToggleIconButton @bind-Toggled="@IsDark"
+                             Icon="@Icons.Material.Filled.Nightlight" Color="Color.Inherit" Title="Light Mode"
+                             ToggledIcon="@Icons.Material.Filled.WbSunny" ToggledColor="@Color.Inherit" ToggledTitle="Dark Mode"/>
         <MudIconButton Icon="@Icons.Material.Filled.Logout" Color="Color.Inherit" Link="" Target="_blank" />
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
@@ -24,7 +28,22 @@
 
 @code {
     bool _drawerOpen = true;
-
+    private bool IsDark { get; set; } = false;
+    private MudTheme _theme = new MudTheme()
+    {
+        Palette = new Palette()
+        {
+            Primary = "#34E26E",
+            Secondary = "#45a4ad",
+            Tertiary = "#5a7a95",
+            AppbarBackground = "#000021",
+        },
+        LayoutProperties = new LayoutProperties()
+        {
+            DrawerWidthLeft = "260px",
+            DrawerWidthRight = "300px"
+        }
+    };
     void DrawerToggle()
     {
         _drawerOpen = !_drawerOpen;
