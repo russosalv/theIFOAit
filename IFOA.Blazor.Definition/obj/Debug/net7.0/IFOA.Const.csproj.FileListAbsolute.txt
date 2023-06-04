@@ -1,0 +1,12 @@
+D:\Dev\PlayGround\ifoaIt\IFOA.Const\bin\Debug\net7.0\IFOA.Const.deps.json
+D:\Dev\PlayGround\ifoaIt\IFOA.Const\bin\Debug\net7.0\IFOA.Const.dll
+D:\Dev\PlayGround\ifoaIt\IFOA.Const\bin\Debug\net7.0\IFOA.Const.pdb
+D:\Dev\PlayGround\ifoaIt\IFOA.Const\obj\Debug\net7.0\IFOA.Const.csproj.AssemblyReference.cache
+D:\Dev\PlayGround\ifoaIt\IFOA.Const\obj\Debug\net7.0\IFOA.Const.GeneratedMSBuildEditorConfig.editorconfig
+D:\Dev\PlayGround\ifoaIt\IFOA.Const\obj\Debug\net7.0\IFOA.Const.AssemblyInfoInputs.cache
+D:\Dev\PlayGround\ifoaIt\IFOA.Const\obj\Debug\net7.0\IFOA.Const.AssemblyInfo.cs
+D:\Dev\PlayGround\ifoaIt\IFOA.Const\obj\Debug\net7.0\IFOA.Const.csproj.CoreCompileInputs.cache
+D:\Dev\PlayGround\ifoaIt\IFOA.Const\obj\Debug\net7.0\IFOA.Const.dll
+D:\Dev\PlayGround\ifoaIt\IFOA.Const\obj\Debug\net7.0\refint\IFOA.Const.dll
+D:\Dev\PlayGround\ifoaIt\IFOA.Const\obj\Debug\net7.0\IFOA.Const.pdb
+D:\Dev\PlayGround\ifoaIt\IFOA.Const\obj\Debug\net7.0\ref\IFOA.Const.dll

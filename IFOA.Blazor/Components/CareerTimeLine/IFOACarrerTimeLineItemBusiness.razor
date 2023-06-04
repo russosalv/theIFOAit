@@ -1,0 +1,20 @@
+﻿@namespace IFOA.Blazor.Components.CareerTimeLine
+
+<IFOACareerTimeLineItem
+    Color="Color.Primary"
+    Icon="@Icons.Material.Filled.Business"
+    Date="@Date"
+    HeaderText="@CompanyName"
+    HeaderSubText="@JobTitle"
+    Text="@JobSummary"
+    DetailLink="@DetailLink"
+    DetailLinkColor="Color.Primary"
+/>
+
+@code {
+    [Parameter] public string Date { get; set; } = "2020";
+    [Parameter] public string CompanyName { get; set; } = "Company Name";
+    [Parameter] public string JobTitle { get; set; } = "Job Title";
+    [Parameter] public string JobSummary { get; set; } = "Job Summary";
+    [Parameter] public string DetailLink { get; set; } = "/";
+}

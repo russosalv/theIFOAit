@@ -1,0 +1,34 @@
+﻿@page "/candidate-profile"
+@using IFOA.Blazor.Components.CareerTimeLine
+
+<MudFab Style="position:fixed; bottom:15px; right:15px" Color=@Color.Secondary Icon=@Icons.Material.Filled.Edit/>
+
+<MudGrid>
+    <!-- Drawer -->
+    <MudItem lg="4" xs="12">
+
+        <MudCard>
+            <MudCardMedia Image="https://dummyimage.com/200" Height="200"/>
+            <MudCardContent>
+                <MudText Typo="Typo.h5">Name Surname</MudText>
+                <MudText Typo="Typo.body2">Job description</MudText>
+                <MudText Typo="Typo.body2">Bio bla bla bla bla bla bla bla ...</MudText>
+                <MudRating SelectedValue="4"/>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+
+    <!-- Main Content -->
+    <MudItem lg="8" xs="12">
+        <MudPaper Class="d-flex align-center justify-center mud-width-full py-8">xs=6</MudPaper>
+    </MudItem>
+
+    <!-- Carrer Timeline -->
+    <IFOACareerTimeLine>
+    </IFOACareerTimeLine>
+
+</MudGrid>
+
+@code {
+
+}

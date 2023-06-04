@@ -10,4 +10,8 @@
     <PackageReference Include="MudBlazor" Version="6.0.13" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\IFOA.Blazor.Definition\IFOA.Blazor.Definition.csproj" />
+  </ItemGroup>
+
 </Project>

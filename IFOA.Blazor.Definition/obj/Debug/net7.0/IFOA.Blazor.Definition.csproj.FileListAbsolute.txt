@@ -1,0 +1,12 @@
+D:\Dev\PlayGround\ifoaIt\IFOA.Blazor.Definition\bin\Debug\net7.0\IFOA.Blazor.Definition.deps.json
+D:\Dev\PlayGround\ifoaIt\IFOA.Blazor.Definition\bin\Debug\net7.0\IFOA.Blazor.Definition.dll
+D:\Dev\PlayGround\ifoaIt\IFOA.Blazor.Definition\bin\Debug\net7.0\IFOA.Blazor.Definition.pdb
+D:\Dev\PlayGround\ifoaIt\IFOA.Blazor.Definition\obj\Debug\net7.0\IFOA.Blazor.Definition.csproj.AssemblyReference.cache
+D:\Dev\PlayGround\ifoaIt\IFOA.Blazor.Definition\obj\Debug\net7.0\IFOA.Blazor.Definition.GeneratedMSBuildEditorConfig.editorconfig
+D:\Dev\PlayGround\ifoaIt\IFOA.Blazor.Definition\obj\Debug\net7.0\IFOA.Blazor.Definition.AssemblyInfoInputs.cache
+D:\Dev\PlayGround\ifoaIt\IFOA.Blazor.Definition\obj\Debug\net7.0\IFOA.Blazor.Definition.AssemblyInfo.cs
+D:\Dev\PlayGround\ifoaIt\IFOA.Blazor.Definition\obj\Debug\net7.0\IFOA.Blazor.Definition.csproj.CoreCompileInputs.cache
+D:\Dev\PlayGround\ifoaIt\IFOA.Blazor.Definition\obj\Debug\net7.0\IFOA.Blazor.Definition.dll
+D:\Dev\PlayGround\ifoaIt\IFOA.Blazor.Definition\obj\Debug\net7.0\refint\IFOA.Blazor.Definition.dll
+D:\Dev\PlayGround\ifoaIt\IFOA.Blazor.Definition\obj\Debug\net7.0\IFOA.Blazor.Definition.pdb
+D:\Dev\PlayGround\ifoaIt\IFOA.Blazor.Definition\obj\Debug\net7.0\ref\IFOA.Blazor.Definition.dll

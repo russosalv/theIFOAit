@@ -1,0 +1,61 @@
+﻿@namespace IFOA.Blazor.Components.CareerTimeLine
+
+<MudTimelineItem Color="@Color" Size="Size.Small">
+    <ItemOpposite>
+        <MudText Color="@Color" Typo="Typo.h5">@Date</MudText>
+    </ItemOpposite>
+    <ItemContent>
+        <MudCard Outlined="true" Elevation="25">
+            <MudCardHeader>
+                <CardHeaderAvatar>
+                    <MudAvatar Color="@Color">
+                        <MudIcon Icon="@Icon"/>
+                    </MudAvatar>
+                </CardHeaderAvatar>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.body1">@HeaderText</MudText>
+                    <MudText Typo="Typo.body2">@HeaderSubText</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudText>@GetDelimitedText()</MudText>
+                <MudLink Color="@DetailLinkColor" Href="@DetailLink">View Detail</MudLink>
+            </MudCardContent>
+        </MudCard>
+    </ItemContent>
+</MudTimelineItem>
+
+@code
+{
+    [Parameter] public Color Color { get; set; } = Color.Primary;
+    [Parameter] public string Icon { get; set; } = Icons.Material.Filled.Business;
+    
+    [Parameter] public string HeaderText { get; set; } = "Header Text";
+    [Parameter] public string HeaderSubText { get; set; } = "Header SubText";
+    
+    [Parameter]
+    public string Date { get; set; } = "1986";
+
+    [Parameter]
+    public string Text { get; set; } = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation";
+
+    [Parameter] public string DetailLink { get; set; } = "/";
+    
+    [Parameter] public Color DetailLinkColor { get; set; } = Color.Primary;
+    private string GetDelimitedText()
+    {
+        if(string.IsNullOrEmpty(Text))
+        {
+            return string.Empty;
+        }
+        
+        if (Text.Length > 150)
+        {
+            return Text.Substring(0, 150) + " ...";
+        }
+        else
+        {
+            return Text;
+        }
+    }
+}

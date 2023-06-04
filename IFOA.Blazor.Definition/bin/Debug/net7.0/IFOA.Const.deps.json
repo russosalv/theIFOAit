@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v7.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v7.0": {
+      "IFOA.Const/1.0.0": {
+        "runtime": {
+          "IFOA.Const.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "IFOA.Const/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

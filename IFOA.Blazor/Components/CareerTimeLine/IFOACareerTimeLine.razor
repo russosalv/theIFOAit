@@ -1,0 +1,40 @@
+﻿@namespace IFOA.Blazor.Components.CareerTimeLine
+@using IFOA.Blazor.Components.CareerTimeLine
+@using IFOA.Blazor.Definition.Enums
+
+<MudItem xs="12">
+    <MudCard>
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudText Typo="Typo.h6">Career Timeline</MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudItem xs="12" sm="5">
+                <MudSelect 
+                    T="TimeLineTypeElementEnum" 
+                    Label="View" 
+                    Placeholder="All"
+                    Dense="true" MultiSelection="true"
+                    Variant="Variant.Outlined"
+                    @bind-SelectedValues="_selectedTimeLineTypeElementEnum">
+                    <MudSelectItem T="TimeLineTypeElementEnum" Value="TimeLineTypeElementEnum.Business">Business</MudSelectItem>
+                    <MudSelectItem T="TimeLineTypeElementEnum" Value="TimeLineTypeElementEnum.School">Study</MudSelectItem>
+                    <MudSelectItem T="TimeLineTypeElementEnum" Value="TimeLineTypeElementEnum.Project">Project</MudSelectItem>
+                </MudSelect>
+            </MudItem>
+            <MudTimeline>
+                <IFOACarrerTimeLineItemBusiness/>
+                <IFOACarrerTimeLineItemProject/>
+                <IFOACarrerTimeLineItemBusiness/>
+                <IFOACarrerTimeLineItemStudy/>
+                <IFOACareerTimeLineItem/>
+                <IFOACareerTimeLineItem/>
+            </MudTimeline>
+        </MudCardContent>
+    </MudCard>
+</MudItem>
+
+@code {
+    private IEnumerable<TimeLineTypeElementEnum> _selectedTimeLineTypeElementEnum = new HashSet<TimeLineTypeElementEnum>();
+}
