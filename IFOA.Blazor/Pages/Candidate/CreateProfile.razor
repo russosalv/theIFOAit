@@ -1,0 +1,201 @@
+@attribute [Route(CreateProfile.PageUrl)]
+@attribute [Route(CreateProfile.PageUrl2 + "/{Id:guid?}")]
+@using System.ComponentModel.DataAnnotations
+@using System.Text.RegularExpressions
+@using IFOA.DB.Entities
+@using IFOA.Shared
+@using Netizine.Enums
+@inherits IFOA.Blazor.Common.DbPage
+
+<MudText Typo="Typo.h3" Align="Align.Center" GutterBottom="true">Create your profile</MudText>
+
+<MudForm >
+    <MudExpansionPanels MultiExpansion="true">
+        <MudExpansionPanel IsInitiallyExpanded="true">
+            <TitleContent>
+                <div class="d-flex">
+                    <MudIcon Icon="@Icons.Material.Filled.Person" class="mr-3"></MudIcon>
+                    <MudText>
+                        <strong>Personal Info</strong>
+                    </MudText>
+                </div>
+            </TitleContent>
+            <ChildContent>
+                <MudGrid>
+                    <MudItem sm="1" xs="12">
+                        <MudSelect T="GenderEnum" Label="Gender" AnchorOrigin="Origin.BottomCenter" @bind-Value="@CandidateDto.Gender">
+                            <MudSelectItem Value="@(GenderEnum.Male)">
+                                Mr
+                            </MudSelectItem>
+                            <MudSelectItem Value="@(GenderEnum.Female)">
+                                Mrs
+                            </MudSelectItem>
+                            <MudSelectItem Value="@(GenderEnum.NotSpecified)">
+                                Other
+                            </MudSelectItem>
+                        </MudSelect>
+                    </MudItem>
+                    <MudItem sm="5" xs="12">
+                        <MudTextField T="string" Label="First Name" Required="true" RequiredError="First Name is required!"
+                                      @bind-Value="@CandidateDto.Name"/>
+                    </MudItem>
+                    <MudItem sm="6" xs="12">
+                        <MudTextField T="string" Label="Last Name" Required="true" RequiredError="Last Name is required!"
+                                      @bind-Value="@CandidateDto.Surname"/>
+                    </MudItem>
+                    <MudItem sm="6" xs="12">
+                        <MudTextField T="string" Label="Email" Required="true" RequiredError="Email is required!"
+                                      Validation="@(new EmailAddressAttribute() { ErrorMessage = "The email address is invalid" })"
+                                      @bind-Value="@CandidateDto.Email"/>
+                    </MudItem>
+                    <MudItem sm="4" xs="12">
+                        <MudTextField T="string" Label="Mobile number"
+                                      Validation="@(new Func<string, IEnumerable<string>>(MobileValidation))"
+                                      Required="true"
+                                      RequiredError="Mobile number is required!"
+                                      @bind-Value="@CandidateDto.PhoneNumber"/>
+                    </MudItem>
+                    <MudItem sm="2" xs="12">
+                        <MudDatePicker Label="Date of Birth" DisableToolbar="true"
+                                       @bind-Date="@CandidateDto.BirthDate"
+                                       Required="true"
+                                       RequiredError="Date of Birth is required!"/>
+                    </MudItem>
+                </MudGrid>
+            </ChildContent>
+        </MudExpansionPanel>
+
+        <MudExpansionPanel IsInitiallyExpanded="true">
+            <TitleContent>
+                <div class="d-flex">
+                    <MudIcon Icon="@Icons.Material.Filled.LocationCity" class="mr-3"></MudIcon>
+                    <MudText>
+                        <strong>Location Info</strong>
+                    </MudText>
+                </div>
+            </TitleContent>
+            <ChildContent>
+                <MudGrid>
+                    <MudItem sm="6" xs="12">
+                        <MudSelectExtended MultiSelection="false"
+                                           ItemCollection="_countries"
+                                           SearchBox="true"
+                                           SearchBoxAutoFocus="true"
+                                           T="Country?"
+                                           Label="Nationality"
+                                           AnchorOrigin="Origin.BottomCenter"
+                                           HelperText="Country of your citizenship"
+                                           SearchBoxClearable="true"
+                                           @bind-Value="@CandidateDto.Nationality"/>
+                    </MudItem>
+                    <MudItem sm="6" xs="12">
+                        <MudSelectExtended MultiSelection="false"
+                                           ItemCollection="_countries"
+                                           SearchBox="true"
+                                           SearchBoxAutoFocus="true"
+                                           T="Country?"
+                                           Label="Residence Country"
+                                           AnchorOrigin="Origin.BottomCenter"
+                                           HelperText="Nation where you live"
+                                           SearchBoxClearable="true"
+                                           @bind-Value="@CandidateDto.ResidenceCountry"/>
+                    </MudItem>
+                    <MudItem sm="6" xs="12">
+                        <MudTextField T="string" Label="Address"
+                                      @bind-Value="@CandidateDto.Address"/>
+                    </MudItem>
+                    <MudItem sm="4" xs="12">
+                        <MudTextField T="string" Label="City"
+                                      @bind-Value="@CandidateDto.City"/>
+                    </MudItem>
+                    <MudItem sm="2" xs="12">
+                        <MudTextField T="string" Label="Zip Code"
+                                      @bind-Value="@CandidateDto.ZipCode"/>
+                    </MudItem>
+                </MudGrid>
+            </ChildContent>
+        </MudExpansionPanel>
+
+
+        <MudExpansionPanel IsInitiallyExpanded="true">
+            <TitleContent>
+                <div class="d-flex">
+                    <MudIcon Icon="@Icons.Material.Filled.WorkHistory" class="mr-3"></MudIcon>
+                    <MudText>
+                        <strong>About You</strong>
+                    </MudText>
+                </div>
+            </TitleContent>
+            <ChildContent>
+                <MudItem sm="12">
+                    <MudTextField T="string"
+                                  Label="Biography" Lines="2"
+                                  Placeholder="Write here a summary of your career (max 2000 characters)"
+                                  Variant="Variant.Outlined" AdornmentIcon="@Icons.Material.Filled.Api"
+                                  @bind-Value="@CandidateDto.Biography"/>
+                </MudItem>
+                <MudItem sm="12" Class="mt-6">
+                    <MudText Typo="Typo.subtitle1" Class="mb-2">
+                        <strong>Cover Letter</strong>
+                    </MudText>
+                    <Editor
+                        ApiKey="4riwbr0v74s2z20eq0oyvwylb7gh6994zfgkv31okjqg931g"
+                        @bind-Value="@CandidateDto.CoverLetter"
+                        Conf="@editorConf"/>
+                </MudItem>
+            </ChildContent>
+        </MudExpansionPanel>
+
+    </MudExpansionPanels>
+
+    <MudSpeedDial Origin="Origin.BottomRight"
+                  Style="position:fixed; z-index: 100"
+                  Padding="10"
+                  OpenOnHover="true"
+                  Icon="@Icons.Material.Filled.Save"
+                  Color="Color.Primary"
+                  OnMainButtonClick="SaveData">
+        <MudTooltip Text="Clear">
+            <MudFab Size="Size.Small" IconSize="Size.Small" Icon="@Icons.Material.Outlined.Cancel" Color="Color.Tertiary"/>
+        </MudTooltip>
+    </MudSpeedDial>
+</MudForm>
+
+
+@code {
+
+        public const string PageUrl = "/candidate-profile/create";
+        public const string PageUrl2 = "/candidate-profile/update";
+    MudForm form;
+    
+    private Dictionary<string, object> editorConf = new Dictionary<string, object>{
+        {"paste_block_drop",true} //Disable paste images
+    };
+
+    private IEnumerable<string> MobileValidation(string pn)
+    {
+        if (string.IsNullOrWhiteSpace(pn))
+        {
+            yield return "Mobile number is required!";
+            yield break;
+        }
+        if (pn.StartsWith("+") == false && pn.StartsWith("00") == false)
+        {
+            yield return "Mobile number must start with + or 00";
+        }
+        if (pn.Length < 5)
+        {
+            yield return "Mobile number is too short";
+        }
+        if (Regex.IsMatch(pn, @"[A-Za-z]"))
+            yield return "Mobile number must contain only numbers";
+    }
+
+    private async Task<IEnumerable<Country?>> SearchCountry(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+            return EnumHelper.GetValues<Country?>().ToList();
+        return EnumHelper.GetValues<Country?>().Where(x => x.ToString().Contains(value, StringComparison.InvariantCultureIgnoreCase)).ToList();
+    }
+
+}

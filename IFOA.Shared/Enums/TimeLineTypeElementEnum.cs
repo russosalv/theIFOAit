@@ -1,4 +1,4 @@
-﻿namespace IFOA.Blazor.Definition.Enums;
+﻿namespace IFOA.Shared.Enums;
 
 public enum TimeLineTypeElementEnum
 {

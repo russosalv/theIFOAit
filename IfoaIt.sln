@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31717.71
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IFOA.Blazor.Definition", "IFOA.Blazor.Definition\IFOA.Blazor.Definition.csproj", "{CDC40916-D7B9-4A6A-B178-D953BCC81D87}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IFOA.Blazor", "IFOA.Blazor\IFOA.Blazor.csproj", "{E5F95EA1-3082-49E4-B034-C5D10FB615DF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IFOA.Exceptions", "IFOA.Exceptions\IFOA.Exceptions.csproj", "{68CD6178-23D6-48C7-8BA3-1C4D02F4919D}"
@@ -19,10 +17,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{CDC40916-D7B9-4A6A-B178-D953BCC81D87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CDC40916-D7B9-4A6A-B178-D953BCC81D87}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CDC40916-D7B9-4A6A-B178-D953BCC81D87}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CDC40916-D7B9-4A6A-B178-D953BCC81D87}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E5F95EA1-3082-49E4-B034-C5D10FB615DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E5F95EA1-3082-49E4-B034-C5D10FB615DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E5F95EA1-3082-49E4-B034-C5D10FB615DF}.Release|Any CPU.ActiveCfg = Release|Any CPU

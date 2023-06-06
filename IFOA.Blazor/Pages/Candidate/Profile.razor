@@ -1,8 +1,9 @@
-﻿@page "/candidate-profile"
+﻿@attribute [Route(Profile.PageUrl+"/{Id:guid?}")]
 @using IFOA.Blazor.Components.CareerTimeLine
-@using IFOA.Blazor.Definition.Dtos
-@using IFOA.Blazor.Definition.Enums
-@inject NavigationManager Navigation
+@using IFOA.Shared.Dtos
+@using IFOA.Shared.Enums
+@inherits IFOA.Blazor.Common.DbPage
+
 
 <MudFab Style="position:fixed; bottom:15px; right:15px; z-index: 100" Color=@Color.Secondary Icon=@Icons.Material.Filled.Edit/>
 
@@ -91,6 +92,8 @@
 </MudGrid>
 
 @code {
+        
+    public const string PageUrl = "/candidate-profile";
 
     private void MailTo()
     {

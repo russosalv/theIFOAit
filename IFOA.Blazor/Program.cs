@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 using IfoaIt.Data;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
+using MudExtensions.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,30 +19,31 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddMudServices();
+builder.Services.AddMudExtensions();
 
 builder.Services.AddDbContextFactory<IfoaContext>(o =>
 {
     o.UseSqlServer("Server=localhost;Database=ifoa;User Id=sa;Password=Password!!!!!!;Trusted_Connection=False;Encrypt=False");
 });
 
-
-builder.Services.AddSignalR().AddAzureSignalR(options =>
-{
-    options.ServerStickyMode = 
-        Microsoft.Azure.SignalR.ServerStickyMode.Required;
-    
-    var signalRConnectionString = builder.Configuration[IfoaConfigurationKeys.SignalRConnectionString];
-
-    if (Debugger.IsAttached)
-    {
-        signalRConnectionString = "Endpoint=https://ifoa.service.signalr.net;AccessKey=qfhVwKPcWtcKQJf6qHdHKJK7jKmRNOoNxModjjEFK2g=;Version=1.0;";
-    }
-    
-    if (string.IsNullOrEmpty(signalRConnectionString))
-        throw new MissingConfigurationException(IfoaConfigurationKeys.SignalRConnectionString);
-
-    options.ConnectionString = signalRConnectionString;
-});
+//
+// builder.Services.AddSignalR().AddAzureSignalR(options =>
+// {
+//     options.ServerStickyMode = 
+//         Microsoft.Azure.SignalR.ServerStickyMode.Required;
+//     
+//     var signalRConnectionString = builder.Configuration[IfoaConfigurationKeys.SignalRConnectionString];
+//
+//     //if (Debugger.IsAttached)
+//     {
+//         signalRConnectionString = "Endpoint=https://ifoa.service.signalr.net;AccessKey=qfhVwKPcWtcKQJf6qHdHKJK7jKmRNOoNxModjjEFK2g=;Version=1.0;";
+//     }
+//     
+//     if (string.IsNullOrEmpty(signalRConnectionString))
+//         throw new MissingConfigurationException(IfoaConfigurationKeys.SignalRConnectionString);
+//
+//     options.ConnectionString = signalRConnectionString;
+// });
 
 var app = builder.Build();
 

@@ -1,6 +1,6 @@
-﻿using IFOA.Blazor.Definition.Enums;
+﻿using IFOA.Shared.Enums;
 
-namespace IFOA.Blazor.Definition.Dtos;
+namespace IFOA.Shared.Dtos;
 
 public class CareerTimeLineData
 {

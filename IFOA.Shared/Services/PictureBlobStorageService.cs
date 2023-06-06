@@ -1,10 +1,9 @@
 ﻿using System.Diagnostics;
 using Azure.Storage.Blobs;
 using IFOA.Exceptions;
-using IFOA.Shared;
 using Microsoft.Extensions.Configuration;
 
-namespace IFOA.Blazor.Definition.Services;
+namespace IFOA.Shared.Services;
 
 public class PictureBlobStorageService
 {
