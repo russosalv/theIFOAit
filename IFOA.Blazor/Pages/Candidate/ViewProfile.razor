@@ -1,4 +1,4 @@
-﻿@attribute [Route(Profile.PageUrl+"/{Id:guid?}")]
+﻿@attribute [Route(ViewProfile.PageUrl + "/{Id:guid?}")]
 @using IFOA.Blazor.Components.CareerTimeLine
 @using IFOA.Shared.Dtos
 @using IFOA.Shared.Enums
@@ -14,10 +14,10 @@
         <MudCard Style="height: 330px">
             <MudCardMedia Image="https://dummyimage.com/200" Height="200"/>
             <MudCardContent>
-                <MudText Typo="Typo.h5">Salvatore Alessandro Russo</MudText>
-                <MudText Typo="Typo.body2">Software Architect</MudText>
-                <MudText Typo="Typo.body2">Bio bla bla bla bla bla bla bla ...</MudText>
-                <MudRating ReadOnly="true" SelectedValue="4"/>
+                <MudText Typo="Typo.h5">@($"{Candidate.Name} {Candidate.Surname}")</MudText>
+                <MudText Typo="Typo.body2">ToDo</MudText>
+                <MudText Typo="Typo.body2">@Candidate.Biography</MudText>
+                <MudRating ReadOnly="true" SelectedValue="@Candidate.Ranking"/>
             </MudCardContent>
         </MudCard>
     </MudItem>
@@ -31,11 +31,11 @@
             <MudCardContent>
 
                 <MudItem xs="12" md="8">
-                    <MudField Label="Day of Birth" Variant="Variant.Text">10-Oct-1986</MudField>
+                    <MudField Label="Day of Birth" Variant="Variant.Text">@(Candidate.BirthDate.Value.ToString("dd-MMM-yyyy"))</MudField>
                 </MudItem>
 
                 <MudItem xs="12" md="8">
-                    <MudField Label="Age" Variant="Variant.Text">37 y.o.</MudField>
+                    <MudField Label="Age" Variant="Variant.Text">@((DateTime.Now.Year - Candidate.BirthDate.Value.Year)) y.o.</MudField>
                 </MudItem>
 
                 <MudItem xs="12" md="8">
@@ -43,7 +43,7 @@
                               Variant="Variant.Text"
                               Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Phone" AdornmentColor="Color.Primary"
                               OnAdornmentClick="() => CallTo()">
-                        +39 3484224991
+                        @Candidate.PhoneNumber
                     </MudField>
                 </MudItem>
 
@@ -51,7 +51,7 @@
                     <MudField Label="Email" Variant="Variant.Text"
                               Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Email" AdornmentColor="Color.Primary"
                               OnAdornmentClick="() => MailTo()">
-                        russosalv@gmail.com
+                        @Candidate.Email
                     </MudField>
                 </MudItem>
 
@@ -66,21 +66,21 @@
             </MudCardHeader>
             <MudCardContent>
                 <MudItem xs="12" md="8">
-                    <MudField Label="Country of Residence" Variant="Variant.Text">Italy</MudField>
+                    <MudField Label="Country of Residence" Variant="Variant.Text">@(Candidate.ResidenceCountry.ToString())</MudField>
                 </MudItem>
 
                 <MudItem xs="12" md="8">
-                    <MudField Label="Nationality" Variant="Variant.Text">Italian</MudField>
+                    <MudField Label="Nationality" Variant="Variant.Text">@(Candidate.Nationality.ToString())</MudField>
                 </MudItem>
 
                 <MudItem xs="12" md="8">
-                    <MudField Label="Address" Variant="Variant.Text">Via San.Martino 45a</MudField>
+                    <MudField Label="Address" Variant="Variant.Text">@Candidate.Address</MudField>
                 </MudItem>
 
                 <MudItem xs="12" md="8">
-                    <MudField Label="City" Variant="Variant.Text">La Spezia</MudField>
+                    <MudField Label="City" Variant="Variant.Text">@($"{Candidate.ZipCode} {Candidate.City}")</MudField>
                 </MudItem>
-
+                
             </MudCardContent>
         </MudCard>
     </MudItem>
@@ -92,8 +92,8 @@
 </MudGrid>
 
 @code {
-        
-    public const string PageUrl = "/candidate-profile";
+
+        public const string PageUrl = "/candidate-profile";
 
     private void MailTo()
     {

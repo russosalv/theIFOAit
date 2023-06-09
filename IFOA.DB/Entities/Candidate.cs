@@ -25,4 +25,7 @@ public class Candidate
     
     public virtual List<CandidateCertification> CandidateCertifications { get; set; }
     public virtual List<CandidateProject> CandidateProjects { get; set; }
+    public virtual List<CandidatePreferredJobFunction> CandidatePreferredJobFunctions { get; set; }
+    public virtual List<CandidatePreferredLocation> CandidatePreferredLocations { get; set; }
+    public virtual List<CandidateSpokenLanguage> CandidateSpokenLanguages { get; set; }
 }

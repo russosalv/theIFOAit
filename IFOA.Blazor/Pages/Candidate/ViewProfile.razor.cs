@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IFOA.Blazor.Pages.Candidate;
 
-public partial class Profile : DbPage
+public partial class ViewProfile : DbPage
 {
     [Parameter] public Guid? Id { get; set; }
 
@@ -25,16 +25,16 @@ public partial class Profile : DbPage
             await using var _context = await DbContextFactory.CreateDbContextAsync();
             var candidateFromDb = await _context.Candidates.FirstOrDefaultAsync(x => x.Id == Id);
 
-            if (candidateFromDb is null)
-            {
-                Navigation.NavigateTo(CreateProfile.PageUrl);
-            }
+            // if (candidateFromDb is null)
+            // {
+            //     Navigation.NavigateTo(EditProfile.PageUrl);
+            // }
 
             Candidate = candidateFromDb ?? new();
         }
         else
         {
-            Navigation.NavigateTo(CreateProfile.PageUrl);
+            // Navigation.NavigateTo(EditProfile.PageUrl);
         }
 
         Busy = false;

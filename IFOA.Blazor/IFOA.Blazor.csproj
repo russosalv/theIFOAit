@@ -20,10 +20,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Pages\Candidate\Profile.razor.cs">
+    <Compile Update="Pages\Candidate\ViewProfile.razor.cs">
       <DependentUpon>Profile.razor</DependentUpon>
     </Compile>
-    <Compile Update="Pages\Candidate\CreateProfile.razor.cs">
+    <Compile Update="Pages\Candidate\EditProfile.razor.cs">
       <DependentUpon>CreateProfile.razor</DependentUpon>
     </Compile>
   </ItemGroup>
