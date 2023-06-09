@@ -127,8 +127,8 @@
         </div>
     </TitleContent>
     <ChildContent>
-        <MudContainer>
-            <MudItem xs="8">
+        <MudGrid>
+            <MudItem xs="10">
                 <MudSelectExtended MultiSelection="true"
                                    ItemCollection="_languages"
                                    SearchBox="true"
@@ -140,9 +140,9 @@
             </MudItem>
 
             <MudItem xs="2">
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddToSpokenLanguage">Add Selected</MudButton>
+                <MudButton Style="margin-top: 16px;" Variant="Variant.Filled" Color="Color.Primary" OnClick="AddToSpokenLanguage">Add Selected</MudButton>
             </MudItem>
-        </MudContainer>
+        </MudGrid>
 
         <MudItem xs="12">
             <MudDataGrid T="CandidateSpokenLanguage"
