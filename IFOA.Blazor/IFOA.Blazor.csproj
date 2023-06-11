@@ -10,6 +10,7 @@
     <PackageReference Include="CodeBeam.MudBlazor.Extensions" Version="6.5.0.2" />
     <PackageReference Include="Microsoft.Azure.SignalR" Version="1.21.3" />
     <PackageReference Include="MudBlazor" Version="6.4.1" />
+    <PackageReference Include="Syncfusion.Blazor" Version="21.2.9" />
     <PackageReference Include="TinyMCE.Blazor" Version="1.0.4" />
   </ItemGroup>
 

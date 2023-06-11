@@ -9,6 +9,7 @@ using IfoaIt.Data;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 using MudExtensions.Services;
+using Syncfusion.Blazor;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,7 +48,13 @@ builder.Services.AddDbContextFactory<IfoaContext>(o =>
 
 // builder.WebHost.UseStaticWebAssets();
 
+//Syncflow
+builder.Services.AddSyncfusionBlazor();
+
 var app = builder.Build();
+
+//SyncFlow
+Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Mgo+DSMBaFt+QHJqVk1hXk5Hd0BLVGpAblJ3T2ZQdVt5ZDU7a15RRnVfRFxiSXlRf0diXXleeA==;Mgo+DSMBPh8sVXJ1S0R+X1pFdEBBXHxAd1p/VWJYdVt5flBPcDwsT3RfQF5jT39SdkJhUH1fdHNQTg==;ORg4AjUWIQA/Gnt2VFhiQlJPd11dXmJWd1p/THNYflR1fV9DaUwxOX1dQl9gSXhSd0VkW3ZccXBcRmg=;MjM4MTE5OEAzMjMxMmUzMDJlMzBsSmt0WVJ6NVFDS3hBV3l0aVQwVlJ5WW54emg2SE5IbVhpci9COSsyMjlnPQ==;MjM4MTE5OUAzMjMxMmUzMDJlMzBpdU9ocE00RUo4eDE5ZmlsUzVxaVlMc1hocWZNRXRxckdTUjhQcmU3MDRBPQ==;NRAiBiAaIQQuGjN/V0d+Xk9HfV5AQmBIYVp/TGpJfl96cVxMZVVBJAtUQF1hSn5Vd0RjXn1XcnVQQGVU;MjM4MTIwMUAzMjMxMmUzMDJlMzBhd2UyZnNkSjdiNWloaU5TTC9YTjZqdE00RzdaWnBteUQxeFVad1hEdTZNPQ==;MjM4MTIwMkAzMjMxMmUzMDJlMzBWdnYrTjluOHhkYnNadUIwQzlaV05uRG9GYm1sTkdaQTU1NDhaMjNWY3ZnPQ==;Mgo+DSMBMAY9C3t2VFhiQlJPd11dXmJWd1p/THNYflR1fV9DaUwxOX1dQl9gSXhSd0VkW3ZccXJWQ2g=;MjM4MTIwNEAzMjMxMmUzMDJlMzBTcE5CaFRiZG9oL1lwSjNkRHdIVmdKci9abnR2aVdMbnpCdnhVd0VybDNVPQ==;MjM4MTIwNUAzMjMxMmUzMDJlMzBuMS9hcnJ1ZWU1akY2ZUJLcm5CZzJvOURoVVJaSEdRTEtDaUlMN01vaTl3PQ==;MjM4MTIwNkAzMjMxMmUzMDJlMzBhd2UyZnNkSjdiNWloaU5TTC9YTjZqdE00RzdaWnBteUQxeFVad1hEdTZNPQ==");
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

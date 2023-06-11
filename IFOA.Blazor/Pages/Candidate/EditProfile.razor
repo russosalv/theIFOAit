@@ -364,6 +364,12 @@
                 </Columns>
             </MudDataGrid>
         </MudItem>
+        
+        <MudItem>
+            <SfGrid DataSource="@CandidatePreferredLocations" Toolbar="@(new List<string>() { "Add", "Edit", "Delete", "Update", "Cancel" })" AllowPaging="true">
+            <GridEditSettings AllowAdding="true" AllowDeleting="true" AllowEditing="true"></GridEditSettings>
+            </SfGrid>
+        </MudItem>
     </ChildContent>
 </MudExpansionPanel>
 
