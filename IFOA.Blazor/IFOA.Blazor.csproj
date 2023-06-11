@@ -9,7 +9,7 @@
   <ItemGroup>
     <PackageReference Include="CodeBeam.MudBlazor.Extensions" Version="6.5.0.2" />
     <PackageReference Include="Microsoft.Azure.SignalR" Version="1.21.3" />
-    <PackageReference Include="MudBlazor" Version="6.3.1" />
+    <PackageReference Include="MudBlazor" Version="6.4.1" />
     <PackageReference Include="TinyMCE.Blazor" Version="1.0.4" />
   </ItemGroup>
 
@@ -21,10 +21,10 @@
 
   <ItemGroup>
     <Compile Update="Pages\Candidate\ViewProfile.razor.cs">
-      <DependentUpon>Profile.razor</DependentUpon>
+      <DependentUpon>ViewProfile.razor</DependentUpon>
     </Compile>
     <Compile Update="Pages\Candidate\EditProfile.razor.cs">
-      <DependentUpon>CreateProfile.razor</DependentUpon>
+      <DependentUpon>EditProfile.razor</DependentUpon>
     </Compile>
   </ItemGroup>
 

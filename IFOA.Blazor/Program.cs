@@ -45,6 +45,8 @@ builder.Services.AddDbContextFactory<IfoaContext>(o =>
 //     options.ConnectionString = signalRConnectionString;
 // });
 
+// builder.WebHost.UseStaticWebAssets();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

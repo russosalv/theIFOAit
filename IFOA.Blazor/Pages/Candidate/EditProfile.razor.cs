@@ -15,11 +15,17 @@ public partial class EditProfile : DbPage
 {
     [Parameter] public Guid? Id { get; set; }
     CandidateDto CandidateDto = new();
-    List<CandidateSpokenLanguage> CandidateSpokenLanguages = new List<CandidateSpokenLanguage>();
-    
+    List<CandidateSpokenLanguageDto> CandidateSpokenLanguages = new List<CandidateSpokenLanguageDto>();
+    List<CandidatePreferredJobFunction> CandidatePreferredJobFunctions = new List<CandidatePreferredJobFunction>();
+    List<CandidatePreferredLocation> CandidatePreferredLocations = new List<CandidatePreferredLocation>();
+
     List<Country?> _countries = new List<Country?>();
     List<Language> _languages = new List<Language>();
+    List<JobFunction> _jobFunctions = new List<JobFunction>();
+
     IEnumerable<Language> _selectedLanguages = new List<Language>();
+    IEnumerable<JobFunction> _selectedJobFunctions = new List<JobFunction>();
+    IEnumerable<Country?> _selectedCountry = new List<Country?>();
 
     [Inject] NavigationManager Navigation { get; set; }
 
@@ -36,17 +42,23 @@ public partial class EditProfile : DbPage
         await using var _context = await DbContextFactory.CreateDbContextAsync();
         var dbData = await _context.Candidates.AsNoTracking()
             .Include(x => x.CandidateSpokenLanguages)
+            .Include(x => x.CandidatePreferredJobFunctions)
+            .ThenInclude(x => x.JobFunction)
+            .Include(x => x.CandidatePreferredLocations)
             .AsSplitQuery()
             .FirstOrDefaultAsync(x => x.Id == Id);
         if (dbData is not null)
         {
             CandidateDto = (CandidateDto)dbData;
-            CandidateSpokenLanguages = dbData.CandidateSpokenLanguages.ToList();
-            // _selectedLanguages = _languages
-            //     .Where(x => dbData.CandidateSpokenLanguages
-            //         .Select(spokenLanguage => spokenLanguage.LanguageCode)
-            //         .Contains(x.Alpha2)).ToList();
+            CandidateSpokenLanguages =
+                dbData.CandidateSpokenLanguages
+                    .Select(x => (CandidateSpokenLanguageDto)x).ToList();
+
+            CandidatePreferredJobFunctions = dbData.CandidatePreferredJobFunctions.ToList();
+            CandidatePreferredLocations = dbData.CandidatePreferredLocations.ToList();
         }
+
+        var jobFunctions = await _context.JobFunctions.AsNoTracking().ToListAsync();
     }
 
     private async Task SaveData()
@@ -69,22 +81,5 @@ public partial class EditProfile : DbPage
 
         await _context?.SaveChangesAsync(CancellationToken.None)!;
         Navigation.NavigateTo($"{ViewProfile.PageUrl}/{CandidateDto.Id}");
-    }
-
-    private Task AddToSpokenLanguage()
-    {
-        foreach (var selectedLanguage in _selectedLanguages)
-        {
-            if(CandidateSpokenLanguages.Any(x => x.LanguageCode == selectedLanguage.Alpha2))
-                continue;
-
-            CandidateSpokenLanguages.Add(new CandidateSpokenLanguage()
-            {
-                LanguageName = selectedLanguage.Name,
-                LanguageCode = selectedLanguage.Alpha2
-            });
-        }
-
-        return Task.CompletedTask;
     }
 }
