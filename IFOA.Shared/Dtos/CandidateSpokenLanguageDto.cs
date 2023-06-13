@@ -4,7 +4,7 @@ using ISOLib.Model;
 
 namespace IFOA.Shared.Dtos;
 
-public class CandidateSpokenLanguageDto
+public class CandidateSpokenLanguageDto : FeEntity
 {
     public int Id { get; set; }
     public Guid CandidateId { get; set; }
@@ -23,6 +23,7 @@ public class CandidateSpokenLanguageDto
 
         return new CandidateSpokenLanguageDto()
         {
+            FeId = x.Id.ToString(),
             Id = x.Id,
             CandidateId = x.CandidateId,
             LanguageCode = x.LanguageCode,

@@ -23,6 +23,10 @@
         }
     }
     
+    .mud-toolbar.mud-toolbar-gutters.mud-table-toolbar {
+        flex-direction: row-reverse;
+    }
+    
     /*.fix-overflow-y >  div:nth-child(2){*/
     /*    overflow-y: clip !important;*/
     /*}*/
@@ -86,6 +90,7 @@
     </ChildContent>
 </MudExpansionPanel>
 
+<!-- Location Info -->
 <MudExpansionPanel IsInitiallyExpanded="true">
     <TitleContent>
         <div class="d-flex">
@@ -99,7 +104,7 @@
         <MudGrid>
             <MudItem sm="6" xs="12">
                 <MudSelectExtended MultiSelection="false"
-                                   ItemCollection="_countries"
+                                   ItemCollection="_countriesNullable"
                                    SearchBox="true"
                                    SearchBoxAutoFocus="true"
                                    T="Country?"
@@ -111,7 +116,7 @@
             </MudItem>
             <MudItem sm="6" xs="12">
                 <MudSelectExtended MultiSelection="false"
-                                   ItemCollection="_countries"
+                                   ItemCollection="_countriesNullable"
                                    SearchBox="true"
                                    SearchBoxAutoFocus="true"
                                    T="Country?"
@@ -148,56 +153,42 @@
         </div>
     </TitleContent>
     <ChildContent>
-        <MudGrid>
-            <MudItem sm="10" xs="12">
-                <MudSelectExtended MultiSelection="true"
-                                   ItemCollection="_languages"
-                                   SearchBox="true"
-                                   SearchBoxAutoFocus="true"
-                                   Label="Kown Languages"
-                                   AnchorOrigin="Origin.BottomCenter"
-                                   SearchBoxClearable="true"
-                                   @bind-SelectedValues="@_selectedLanguages"/>
-            </MudItem>
-
-            <MudItem sm="2" xs="12">
-                <MudButton Class="mobile-button" Variant="Variant.Filled" Color="Color.Primary" OnClick="AddToSpokenLanguage">Add Selected</MudButton>
-            </MudItem>
-        </MudGrid>
 
         <MudItem xs="12">
             <MudDataGrid T="CandidateSpokenLanguageDto"
-                         EditMode="DataGridEditMode.Form"
+                         EditMode="DataGridEditMode.Cell"
                          Items="@CandidateSpokenLanguages"
                          EditTrigger="DataGridEditTrigger.Manual"
                          ReadOnly="false"
                          Bordered="false" Dense="true"
-                         Hideable="true"
-                         MultiSelection="true"
                          Class="mt-5 fix-overflow-y"
-                         FixedFooter="false"
-                         ShowMenuIcon="false"
-                         HorizontalScrollbar="false"
-                         SelectedItemsChanged="@SelectedLanguagesItemsChanged">
+                         HorizontalScrollbar="false">
                 <ToolBarContent>
 
                     <MudButton
                         Variant="Variant.Outlined"
                         Color="Color.Tertiary"
-                        StartIcon="@Icons.Material.Filled.Delete"
+                        StartIcon="@Icons.Material.Filled.Add"
                         Size="Size.Small"
-                        OnClick="DeleteCheckedSpokenLanguages"
-                        Disabled="@(!CheckedCandidateSpokenLanguages.Any())">
-                        Delete Selected
+                        OnClick="AddSpokenLanguage">
+                        Add New
                     </MudButton>
 
                 </ToolBarContent>
                 <Columns>
-                    <SelectColumn T="CandidateSpokenLanguage"/>
-                    <PropertyColumn Property="x => x.LanguageName" Title="Language" IsEditable="false"/>
+                    <PropertyColumn Property="x => x.LanguageName" Title="Language" IsEditable="true">
+                        <EditTemplate>
+                            <MudAutocomplete T="string" @bind-Value="context.Item.LanguageName"
+                                             SearchFunc="LanguagesSearchFunc"
+                                             Required
+                                             RequiredError="You must select a Language!"
+                                             Strict="true">
+                            </MudAutocomplete>
+                        </EditTemplate>
+                    </PropertyColumn>
                     <PropertyColumn Property="x => x.ReadingCefrLevel" Title="Reading Level" IsEditable="true">
                         <EditTemplate>
-                            <MudSelect Label="Reading Level" @bind-Value="context.Item.ReadingCefrLevel" Required RequiredError="You must select a Position!!!" Margin="@Margin.Dense">
+                            <MudSelect @bind-Value="context.Item.ReadingCefrLevel" Required RequiredError="You must select a Position!!!" Margin="@Margin.Dense">
                                 @foreach (var item in EnumHelper.GetValues<CEFRLevelEnum>())
                                 {
                                     <MudSelectItem Value="@item">@item</MudSelectItem>
@@ -207,7 +198,7 @@
                     </PropertyColumn>
                     <PropertyColumn Property="x => x.WritingCefrLevel" Title="Writing Level" IsEditable="true">
                         <EditTemplate>
-                            <MudSelect Label="Writing Level" @bind-Value="context.Item.WritingCefrLevel" Required RequiredError="You must select a Position!!!" Margin="@Margin.Dense">
+                            <MudSelect @bind-Value="context.Item.WritingCefrLevel" Required RequiredError="You must select a Position!!!" Margin="@Margin.Dense">
                                 @foreach (var item in EnumHelper.GetValues<CEFRLevelEnum>())
                                 {
                                     <MudSelectItem Value="@item">@item</MudSelectItem>
@@ -217,7 +208,7 @@
                     </PropertyColumn>
                     <PropertyColumn Property="x => x.SpeakingCefrLevel" Title="Speaking Level" IsEditable="true">
                         <EditTemplate>
-                            <MudSelect Label="Speaking Level" @bind-Value="context.Item.SpeakingCefrLevel" Required RequiredError="You must select a Position!!!" Margin="@Margin.Dense">
+                            <MudSelect @bind-Value="context.Item.SpeakingCefrLevel" Required RequiredError="You must select a Position!!!" Margin="@Margin.Dense">
                                 @foreach (var item in EnumHelper.GetValues<CEFRLevelEnum>())
                                 {
                                     <MudSelectItem Value="@item">@item</MudSelectItem>
@@ -227,7 +218,7 @@
                     </PropertyColumn>
                     <PropertyColumn Property="x => x.ListeningCefrLevel" Title="Listening Level" IsEditable="true">
                         <EditTemplate>
-                            <MudSelect Label="Listening Level" @bind-Value="context.Item.ListeningCefrLevel" Required RequiredError="You must select a Position!!!" Margin="@Margin.Dense">
+                            <MudSelect @bind-Value="context.Item.ListeningCefrLevel" Required RequiredError="You must select a Position!!!" Margin="@Margin.Dense">
                                 @foreach (var item in EnumHelper.GetValues<CEFRLevelEnum>())
                                 {
                                     <MudSelectItem Value="@item">@item</MudSelectItem>
@@ -235,10 +226,10 @@
                             </MudSelect>
                         </EditTemplate>
                     </PropertyColumn>
-                    <TemplateColumn Title="Edit Levels" Sortable="false" Resizable="false">
-                        <CellTemplate>
-                            <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@context.Actions.StartEditingItemAsync"/>
-                        </CellTemplate>
+                    <TemplateColumn Title="Actions" CellClass="d-flex justify-end">
+                        <EditTemplate >
+                            <MudIconButton OnClick="@(() => CancelSpokenLanguage(@context.Item))" Color="@Color.Default" Icon="@Icons.Material.Outlined.Delete"/>
+                        </EditTemplate>
                     </TemplateColumn>
                 </Columns>
             </MudDataGrid>
@@ -258,24 +249,19 @@
         </div>
     </TitleContent>
     <ChildContent>
-        <MudGrid>
-            <MudItem sm="10" xs="12">
-                <MudSelectExtended MultiSelection="true"
-                                   ItemCollection="_jobFunctions"
-                                   SearchBox="true"
-                                   SearchBoxAutoFocus="true"
-                                   Label="Choose Job Functions"
-                                   AnchorOrigin="Origin.BottomCenter"
-                                   SearchBoxClearable="true"
-                                   @bind-SelectedValues="@_selectedJobFunctions"/>
-            </MudItem>
-
-            <MudItem sm="2" xs="12">
-                <MudButton Class="mobile-button" Variant="Variant.Filled" Color="Color.Primary" OnClick="AddToSpokenLanguage">Add Selected</MudButton>
-            </MudItem>
-        </MudGrid>
-
+        
         <MudItem xs="12">
+            @foreach (var item in _jobFunctionChips)
+            {
+                <MudChip Label="true"
+                         Variant="Variant.Outlined"
+                         Color="@item.Color"
+                         Class="mr-2 mb-2"
+                         Icon="@item.Icon"
+                         OnClick="@(() => ToggleJobFunctionClip(item))">
+                    @item.JobFunction.Description
+                </MudChip>
+            }
         </MudItem>
     </ChildContent>
 
@@ -292,27 +278,9 @@
         </div>
     </TitleContent>
     <ChildContent>
-        <MudGrid>
-            <MudItem sm="10" xs="12">
-                <MudSelectExtended MultiSelection="true"
-                                   ItemCollection="_countries"
-                                   T="Country?"
-                                   SearchBox="true"
-                                   SearchBoxAutoFocus="true"
-                                   Label="Your Preferred Working Location"
-                                   AnchorOrigin="Origin.BottomCenter"
-                                   SearchBoxClearable="true"
-                                   @bind-SelectedValues="@_selectedCountry"/>
-            </MudItem>
-
-            <MudItem sm="2" xs="12">
-                <MudButton Class="mobile-button" Variant="Variant.Filled" Color="Color.Primary" OnClick="AddToPreferredLocation">Add Selected</MudButton>
-            </MudItem>
-        </MudGrid>
-
         <MudItem xs="12">
-            <MudDataGrid T="CandidatePreferredLocation"
-                         EditMode="DataGridEditMode.Form"
+            <MudDataGrid T="CandidatePreferredLocationDto"
+                         EditMode="DataGridEditMode.Cell"
                          Items="@CandidatePreferredLocations"
                          ReadOnly="false"
                          Bordered="false"
@@ -329,37 +297,27 @@
                         StartIcon="@Icons.Material.Filled.Add"
                         Size="Size.Small"
                         OnClick="AddPreferredLocation">
-                        Add New
-                    </MudButton>
-
-                    <MudButton
-                        Variant="Variant.Outlined"
-                        Color="Color.Tertiary"
-                        StartIcon="@Icons.Material.Filled.Delete"
-                        Size="Size.Small"
-                        OnClick="DeleteCheckedPreferredLocation"
-                        Disabled="@(!CheckedCandidatePreferredLocations.Any())">
-                        Delete Selected
+                        Add Location
                     </MudButton>
 
                 </ToolBarContent>
                 <Columns>
                     <PropertyColumn Property="x => x.Country" Title="Country" IsEditable="true">
                         <EditTemplate>
-                            <MudSelect @bind-Value="context.Item.Country" Required RequiredError="You must select a Position!!!" Margin="@Margin.Dense">
-                                @foreach (var item in EnumHelper.GetValues<Country>())
-                                {
-                                    <MudSelectItem Value="@item">@item</MudSelectItem>
-                                }
-                            </MudSelect>
+                            <MudAutocomplete T="Country?" @bind-Value="context.Item.Country"
+                                             SearchFunc="CountrySearchFunc"
+                                             Required="true"
+                                             Strict="true"
+                                             Immediate="false"
+                                             Validation="@(new Func<string, IEnumerable<string>>(ValidateCountry))">
+                            </MudAutocomplete>
                         </EditTemplate>
                     </PropertyColumn>
                     <PropertyColumn Property="x => x.City" Title="City" IsEditable="true"/>
-                    <TemplateColumn Title="test">
-                        <CellTemplate>
-                            <MudIconButton OnClick="@context.Actions.StartEditingItemAsync" Color="@Color.Default" Icon="@Icons.Material.Filled.Edit"/>
-                            <MudIconButton OnClick="@(() => PrcdBtnClick(@context.Item))" Color="@Color.Default" Icon="@Icons.Material.Filled.Delete"/>
-                        </CellTemplate>
+                    <TemplateColumn Title="Actions" CellClass="d-flex justify-end">
+                        <EditTemplate >
+                            <MudIconButton OnClick="@(() => CancelPreferredLocation(@context.Item))" Color="@Color.Default" Icon="@Icons.Material.Outlined.Delete"/>
+                        </EditTemplate>
                     </TemplateColumn>
                 </Columns>
             </MudDataGrid>
@@ -446,111 +404,70 @@
             yield return "Mobile number must contain only numbers";
     }
 
-    private async Task<IEnumerable<Country?>> SearchCountry(string value)
-    {
-        if (string.IsNullOrEmpty(value))
-            return EnumHelper.GetValues<Country?>().ToList();
-        return EnumHelper.GetValues<Country?>().Where(x => x.ToString().Contains(value, StringComparison.InvariantCultureIgnoreCase)).ToList();
-    }
-
-    private void SelectedLanguagesItemsChanged(HashSet<CandidateSpokenLanguageDto> items)
-    {
-        CheckedCandidateSpokenLanguages = items;
-    }
-
-    private void SelectedCountryItemsChanged(HashSet<CandidatePreferredLocation> items)
-    {
-        CheckedCandidatePreferredLocations = items;
-    }
-
-    private void DeleteCheckedSpokenLanguages()
-    {
-        foreach (var checkedCandidateSpokenLanguage in CheckedCandidateSpokenLanguages)
-        {
-            _selectedLanguages = _selectedLanguages.Where(x => x.Alpha2 != checkedCandidateSpokenLanguage.LanguageCode).ToList();
-            CandidateSpokenLanguages = CandidateSpokenLanguages.Where(x => x.LanguageCode != checkedCandidateSpokenLanguage.LanguageCode).ToList();
-        }
-
-        CheckedCandidateSpokenLanguages = new HashSet<CandidateSpokenLanguageDto>();
-    // StateHasChanged();
-    }
-
-    private void DeleteCheckedPreferredLocation()
-    {
-        foreach (var checkedCandidatePreferredLocation in CheckedCandidatePreferredLocations)
-        {
-            _selectedCountry = _selectedCountry.Where(x => x != checkedCandidatePreferredLocation.Country).ToList();
-            CandidatePreferredLocations = CandidatePreferredLocations
-                .Where(x => x.Country != checkedCandidatePreferredLocation.Country).ToList();
-        }
-
-        CheckedCandidatePreferredLocations = new HashSet<CandidatePreferredLocation>();
-    }
-
     private void AddPreferredLocation()
     {
-        CandidatePreferredLocations.Add(new CandidatePreferredLocation()
+        CandidatePreferredLocations.Add(new CandidatePreferredLocationDto()
         {
-            Country = Country.NotSet
+            FeId = Guid.NewGuid().ToString(),
         });
     }
 
-    private Task AddToSpokenLanguage()
+    private async Task AddSpokenLanguage()
     {
-        foreach (var selectedLanguage in _selectedLanguages)
+        CandidateSpokenLanguages.Add(new CandidateSpokenLanguageDto()
         {
-            if (CandidateSpokenLanguages.Any(x => x.LanguageCode == selectedLanguage.Alpha2))
-                continue;
-
-            CandidateSpokenLanguages.Add(new CandidateSpokenLanguageDto()
-            {
-                LanguageName = selectedLanguage.Name,
-                LanguageCode = selectedLanguage.Alpha2
-            });
-        }
-
-        return Task.CompletedTask;
+            FeId = Guid.NewGuid().ToString(),
+        });
     }
 
-    private Task AddToJobFunction()
+    private void CancelPreferredLocation(CandidatePreferredLocationDto item)
     {
-        foreach (var selectedJobFunction in _selectedJobFunctions)
-        {
-            if (CandidatePreferredJobFunctions.Any(x => x.JobFunctionId == selectedJobFunction.Id))
-                continue;
-
-            CandidatePreferredJobFunctions.Add(new CandidatePreferredJobFunction()
-            {
-                JobFunctionId = selectedJobFunction.Id,
-                JobFunction = selectedJobFunction
-            });
-        }
-
-        return Task.CompletedTask;
+        CandidatePreferredLocations = CandidatePreferredLocations
+            .Where(x => x.FeId != item.FeId).ToList();
     }
 
-    private Task AddToPreferredLocation()
+    private void CancelSpokenLanguage(CandidateSpokenLanguageDto item)
     {
-        foreach (var selectedCountry in _selectedCountry)
-        {
-            if (CandidatePreferredLocations.Any(x => x.Country == selectedCountry))
-                continue;
-
-            CandidatePreferredLocations.Add(new CandidatePreferredLocation()
-            {
-                Country = (Country)selectedCountry!,
-                City = null
-            });
-        }
-
-        return Task.CompletedTask;
+        CandidateSpokenLanguages = CandidateSpokenLanguages
+            .Where(x => x.FeId != item.FeId).ToList();
     }
 
-    private void PrcdBtnClick(CandidatePreferredLocation item)
+    private async Task<IEnumerable<Country?>> CountrySearchFunc(string arg)
     {
-        CheckedCandidatePreferredLocations = CheckedCandidatePreferredLocations
-            .Where(u =>
-                u.Country != item.Country && u.City != item.City).ToHashSet();
+        if (string.IsNullOrEmpty(arg))
+            return _countriesNullable;
+        return _countriesNullable.Where(x => x!.ToString().StartsWith(arg, StringComparison.InvariantCultureIgnoreCase)).ToList();
+    }
+
+    private async Task<IEnumerable<string>> LanguagesSearchFunc(string arg)
+    {
+        if (string.IsNullOrEmpty(arg))
+            return _languages.Select(x => x.Name);
+
+        return _languages
+            .Where(x => x.Name.ToString().StartsWith(arg, StringComparison.InvariantCultureIgnoreCase))
+            .Select(x => x.Name)
+            .ToList();
+    }
+
+    private IEnumerable<string> ValidateCountry(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            yield return "The Country field is required";
+            yield break;
+        }
+
+        if (!_countriesNullable.Any(x => x.ToString().Equals(value, StringComparison.InvariantCultureIgnoreCase)))
+        {
+            yield return "Incorrect Country";
+        }
+    }
+
+    private Task ToggleJobFunctionClip(JobFunctionChip item)
+    {
+        item.IsSelected = !item.IsSelected;
+        return Task.CompletedTask;
     }
 
 }

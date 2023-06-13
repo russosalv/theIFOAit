@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using IFOA.Blazor.Common;
+using IFOA.Blazor.Helpers;
 using IFOA.DB.Entities;
 using IFOA.Shared;
 using IFOA.Shared.Dtos;
@@ -7,6 +8,7 @@ using ISOLib.ISO;
 using ISOLib.Model;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
+using MudBlazor;
 using Country = Netizine.Enums.Country;
 
 namespace IFOA.Blazor.Pages.Candidate;
@@ -16,12 +18,12 @@ public partial class EditProfile : DbPage
     [Parameter] public Guid? Id { get; set; }
     CandidateDto CandidateDto = new();
     List<CandidateSpokenLanguageDto> CandidateSpokenLanguages = new List<CandidateSpokenLanguageDto>();
-    List<CandidatePreferredJobFunction> CandidatePreferredJobFunctions = new List<CandidatePreferredJobFunction>();
-    List<CandidatePreferredLocation> CandidatePreferredLocations = new List<CandidatePreferredLocation>();
+    List<CandidatePreferredLocationDto> CandidatePreferredLocations = new List<CandidatePreferredLocationDto>();
 
-    List<Country?> _countries = new List<Country?>();
+    List<Country?> _countriesNullable = new List<Country?>();
     List<Language> _languages = new List<Language>();
     List<JobFunction> _jobFunctions = new List<JobFunction>();
+    List<JobFunctionChip> _jobFunctionChips = new List<JobFunctionChip>();
 
     IEnumerable<Language> _selectedLanguages = new List<Language>();
     IEnumerable<JobFunction> _selectedJobFunctions = new List<JobFunction>();
@@ -33,7 +35,7 @@ public partial class EditProfile : DbPage
     {
         foreach (var country in EnumHelper.GetValues<Country>().ToList().Where(country => country != Country.NotSet))
         {
-            _countries.Add(country);
+            _countriesNullable.Add(country);
         }
 
         ISO<Language> iso639 = new ISO639();
@@ -54,11 +56,23 @@ public partial class EditProfile : DbPage
                 dbData.CandidateSpokenLanguages
                     .Select(x => (CandidateSpokenLanguageDto)x).ToList();
 
-            CandidatePreferredJobFunctions = dbData.CandidatePreferredJobFunctions.ToList();
-            CandidatePreferredLocations = dbData.CandidatePreferredLocations.ToList();
+            CandidatePreferredLocations = dbData.CandidatePreferredLocations
+                .Select(x => (CandidatePreferredLocationDto)x).ToList();
         }
 
         var jobFunctions = await _context.JobFunctions.AsNoTracking().ToListAsync();
+
+        foreach (var jobFunction in jobFunctions)
+        {
+            var isSelected = dbData?.CandidatePreferredJobFunctions.ToList()
+                .FirstOrDefault(x => x.JobFunctionId == jobFunction.Id) is not null;
+
+            _jobFunctionChips.Add(new JobFunctionChip()
+            {
+                JobFunction = jobFunction,
+                IsSelected = isSelected
+            });
+        }
     }
 
     private async Task SaveData()
@@ -81,5 +95,19 @@ public partial class EditProfile : DbPage
 
         await _context?.SaveChangesAsync(CancellationToken.None)!;
         Navigation.NavigateTo($"{ViewProfile.PageUrl}/{CandidateDto.Id}");
+    }
+
+    public class JobFunctionChip
+    {
+        public JobFunction JobFunction { get; set; }
+        public bool IsSelected { get; set; }
+
+        public Color Color => IsSelected ? Color.Primary : Color.Dark;
+
+        public string Icon =>
+            IsSelected ? Icons.Material.Filled.Check : GraphicHelpers.GetMudIconByName(
+                JobFunction.Icon,
+                Icons.Material.Filled.NotInterested,
+                includeRounded: true);
     }
 }
