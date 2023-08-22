@@ -1,4 +1,5 @@
 using IFOA.DB.Entities;
+using Microsoft.AspNetCore.Components.Forms;
 using Netizine.Enums;
 
 namespace IFOA.Shared.Dtos;
@@ -10,17 +11,25 @@ public class CandidateDto
     public string Name { get; set; }
     public string Surname { get; set; }
     public DateTime? BirthDate { get; set; } = DateTime.Now.AddYears(-18);
-    public Country? Nationality { get; set; } 
+    public Country? Nationality { get; set; }
     public string Email { get; set; }
     public string? PhoneNumber { get; set; }
-    public Country? ResidenceCountry { get; set; } 
-    public string?Address { get; set; }
+    public Country? ResidenceCountry { get; set; }
+    public string? Address { get; set; }
     public string? City { get; set; }
     public string? ZipCode { get; set; }
     public int Ranking { get; set; } = 0;
     public string? ImageLink { get; set; }
     public string? CoverLetter { get; set; } = string.Empty;
     public string? Biography { get; set; }
+
+    public IBrowserFile? ImageFile { get; set; } = null!;
+    public bool IsImageFileChanged { get; set; } = false;
+
+    public List<CandidateSpokenLanguageDto>? CandidateSpokenLanguages { get; set; } = new List<CandidateSpokenLanguageDto>();
+
+    public List<CandidatePreferredLocationDto>? CandidatePreferredLocations { get; set; } =
+        new List<CandidatePreferredLocationDto>();
 
     public static explicit operator Candidate(CandidateDto x)
     {

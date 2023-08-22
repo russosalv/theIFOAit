@@ -2,6 +2,7 @@ using System.Diagnostics;
 using IFOA.DB;
 using IFOA.Exceptions;
 using IFOA.Shared;
+using IFOA.Shared.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Hosting.StaticWebAssets;
@@ -20,6 +21,8 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddMudServices();
 builder.Services.AddMudExtensions();
+builder.Services.AddApplicationInsightsTelemetry();
+builder.Services.AddSingleton<PictureBlobStorageService>();
 
 builder.Services.AddDbContextFactory<IfoaContext>(o =>
 {

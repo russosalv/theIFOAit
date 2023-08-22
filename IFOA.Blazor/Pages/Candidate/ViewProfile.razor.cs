@@ -1,5 +1,6 @@
 using IFOA.Blazor.Common;
 using IFOA.DB;
+using IFOA.Shared.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,7 +12,10 @@ public partial class ViewProfile : DbPage
 
     // [Inject] public PictureBlobStorageService PictureBlobStorageService { get; set; }
     [Inject] public NavigationManager Navigation { get; set; }
+    [Inject] public PictureBlobStorageService PictureBlobStorageService { get; set; } = null!;
     private bool Busy = true;
+    
+    public string ImageBase64 { get; set; } = string.Empty;
     
     private IFOA.DB.Entities.Candidate Candidate { get; set; } = new();
     
@@ -28,6 +32,11 @@ public partial class ViewProfile : DbPage
             // if (candidateFromDb is null)
             // {
             //     Navigation.NavigateTo(EditProfile.PageUrl);
+            // }
+
+            // if (candidateFromDb is not null && string.IsNullOrEmpty(candidateFromDb.ImageLink) == false)
+            // {
+            //     ImageBase64 = await PictureBlobStorageService.GetBase64ImageAsync(candidateFromDb!.ImageLink);
             // }
 
             Candidate = candidateFromDb ?? new();

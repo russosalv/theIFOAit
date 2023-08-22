@@ -2,6 +2,7 @@
 @attribute [Route(EditProfile.PageUrl2 + "/{Id:guid?}")]
 @using System.ComponentModel.DataAnnotations
 @using System.Text.RegularExpressions
+@using FluentValidation
 @using IFOA.DB.Entities
 @using IFOA.Shared
 @using IFOA.Shared.Dtos
@@ -34,8 +35,62 @@
 
 <MudText Typo="Typo.h3" Align="Align.Center" GutterBottom="true">Create your profile</MudText>
 
-<MudForm @ref="form">
+<MudForm @ref="@form" Model="@CandidateDto" Validation="@(candidateDtoFluentValidator.ValidateValue)" ValidationDelay="0">
 <MudExpansionPanels MultiExpansion="true">
+
+<!-- Picture -->
+<MudExpansionPanel IsInitiallyExpanded="true">
+    <TitleContent>
+        <div class="d-flex">
+            <MudIcon Icon="@Icons.Material.Filled.Camera" class="mr-3"></MudIcon>
+            <MudText>
+                <strong>Picture</strong>
+            </MudText>
+        </div>
+    </TitleContent>
+    <ChildContent>
+        <MudGrid>
+            
+            @if (string.IsNullOrEmpty(CandidateDto.ImageLink) == false)
+            {
+                <MudItem sm="12">
+                    <MudImage Src="@CandidateDto.ImageLink" Elevation="25" Class="rounded-lg" Width="200" ObjectFit="ObjectFit.ScaleDown"/>
+                </MudItem>
+            }
+            else if(CandidateDto.IsImageFileChanged == false)
+            {
+                <MudItem sm="12">
+                    <MudImage Src="images/noImage.png" Elevation="25" Class="rounded-lg" Width="200" ObjectFit="ObjectFit.ScaleDown"/>
+                </MudItem>
+            }
+
+            <MudItem sm="12">
+                <MudFileUpload T="IBrowserFile" For="@(() => CandidateDto.ImageFile)"
+                               @bind-Files="CandidateDto.ImageFile"
+                               OnFilesChanged="@(() => { CandidateDto.IsImageFileChanged = true; })">
+                    <ButtonTemplate>
+                        <MudButton HtmlTag="label"
+                                   Variant="Variant.Filled"
+                                   Color="Color.Primary"
+                                   for="@context"
+                                   StartIcon="@Icons.Material.Filled.Image">
+                            Upload Picture
+                        </MudButton>
+                    </ButtonTemplate>
+                    <SelectedTemplate>
+                        @if (context != null)
+                        {
+                            <MudText>New Picture added, save to see.</MudText>
+                        }
+                    </SelectedTemplate>
+                </MudFileUpload>
+            </MudItem>
+
+        </MudGrid>
+    </ChildContent>
+</MudExpansionPanel>
+
+<!-- Personal Info -->
 <MudExpansionPanel IsInitiallyExpanded="true">
     <TitleContent>
         <div class="d-flex">
@@ -48,7 +103,8 @@
     <ChildContent>
         <MudGrid>
             <MudItem sm="1" xs="12">
-                <MudSelect T="GenderEnum" Label="Gender" AnchorOrigin="Origin.BottomCenter" @bind-Value="@CandidateDto.Gender">
+                <MudSelect T="GenderEnum" Label="Gender" AnchorOrigin="Origin.BottomCenter" @bind-Value="@CandidateDto.Gender"
+                           For="@(() => CandidateDto.Gender)">
                     <MudSelectItem Value="@(GenderEnum.Male)">
                         Mr
                     </MudSelectItem>
@@ -62,7 +118,8 @@
             </MudItem>
             <MudItem sm="5" xs="12">
                 <MudTextField T="string" Label="First Name" Required="true" RequiredError="First Name is required!"
-                              @bind-Value="@CandidateDto.Name"/>
+                              @bind-Value="@CandidateDto.Name"
+                              For="@(() => CandidateDto.Name)"/>
             </MudItem>
             <MudItem sm="6" xs="12">
                 <MudTextField T="string" Label="Last Name" Required="true" RequiredError="Last Name is required!"
@@ -86,6 +143,7 @@
                                Required="true"
                                RequiredError="Date of Birth is required!"/>
             </MudItem>
+            
         </MudGrid>
     </ChildContent>
 </MudExpansionPanel>
@@ -157,7 +215,7 @@
         <MudItem xs="12">
             <MudDataGrid T="CandidateSpokenLanguageDto"
                          EditMode="DataGridEditMode.Cell"
-                         Items="@CandidateSpokenLanguages"
+                         Items="@CandidateDto.CandidateSpokenLanguages"
                          EditTrigger="DataGridEditTrigger.Manual"
                          ReadOnly="false"
                          Bordered="false" Dense="true"
@@ -249,7 +307,7 @@
         </div>
     </TitleContent>
     <ChildContent>
-        
+
         <MudItem xs="12">
             @foreach (var item in _jobFunctionChips)
             {
@@ -267,7 +325,7 @@
 
 </MudExpansionPanel>
 
-<!-- Working Location -->
+<!-- Preferred Working Location -->
 <MudExpansionPanel IsInitiallyExpanded="true">
     <TitleContent>
         <div class="d-flex">
@@ -279,48 +337,52 @@
     </TitleContent>
     <ChildContent>
         <MudItem xs="12">
-            <MudDataGrid T="CandidatePreferredLocationDto"
-                         EditMode="DataGridEditMode.Cell"
-                         Items="@CandidatePreferredLocations"
-                         ReadOnly="false"
-                         Bordered="false"
-                         Dense="true"
-                         Class="mt-5 fix-overflow-y"
-                         FixedFooter="false"
-                         ShowMenuIcon="false"
-                         HorizontalScrollbar="false">
-                <ToolBarContent>
+            <MudForm Model="@CandidateDto.CandidatePreferredLocations" Validation=@(candidatePreferredLocationDtoValidator.ValidateValue)>
+                <MudDataGrid T="CandidatePreferredLocationDto"
+                             EditMode="DataGridEditMode.Cell"
+                             Items="@CandidateDto.CandidatePreferredLocations"
+                             ReadOnly="false"
+                             Bordered="false"
+                             Dense="true"
+                             Class="mt-5 fix-overflow-y"
+                             FixedFooter="false"
+                             ShowMenuIcon="false"
+                             HorizontalScrollbar="false">
+                    <ToolBarContent>
 
-                    <MudButton
-                        Variant="Variant.Outlined"
-                        Color="Color.Tertiary"
-                        StartIcon="@Icons.Material.Filled.Add"
-                        Size="Size.Small"
-                        OnClick="AddPreferredLocation">
-                        Add Location
-                    </MudButton>
+                        <MudButton
+                            Variant="Variant.Outlined"
+                            Color="Color.Tertiary"
+                            StartIcon="@Icons.Material.Filled.Add"
+                            Size="Size.Small"
+                            OnClick="AddPreferredLocation">
+                            Add Location
+                        </MudButton>
 
-                </ToolBarContent>
-                <Columns>
-                    <PropertyColumn Property="x => x.Country" Title="Country" IsEditable="true">
-                        <EditTemplate>
-                            <MudAutocomplete T="Country?" @bind-Value="context.Item.Country"
-                                             SearchFunc="CountrySearchFunc"
-                                             Required="true"
-                                             Strict="true"
-                                             Immediate="false"
-                                             Validation="@(new Func<string, IEnumerable<string>>(ValidateCountry))">
-                            </MudAutocomplete>
-                        </EditTemplate>
-                    </PropertyColumn>
-                    <PropertyColumn Property="x => x.City" Title="City" IsEditable="true"/>
-                    <TemplateColumn Title="Actions" CellClass="d-flex justify-end">
-                        <EditTemplate >
-                            <MudIconButton OnClick="@(() => CancelPreferredLocation(@context.Item))" Color="@Color.Default" Icon="@Icons.Material.Outlined.Delete"/>
-                        </EditTemplate>
-                    </TemplateColumn>
-                </Columns>
-            </MudDataGrid>
+                    </ToolBarContent>
+                    <Columns>
+                        <PropertyColumn Property="x => x.Country" Title="Country" IsEditable="true">
+                            <EditTemplate>
+                                <MudForm Model="@context" Validation=@(candidatePreferredLocationDtoValidator.ValidateValue)>
+                                    <MudAutocomplete T="Country?" @bind-Value="context.Item.Country"
+                                                     SearchFunc="CountrySearchFunc"
+                                                     Required="true"
+                                                     Strict="true"
+                                                     Immediate="true"
+                                                     For="(() => context.Item.Country)">
+                                    </MudAutocomplete>
+                                </MudForm>
+                            </EditTemplate>
+                        </PropertyColumn>
+                        <PropertyColumn Property="x => x.City" Title="City" IsEditable="true"/>
+                        <TemplateColumn Title="Actions" CellClass="d-flex justify-end">
+                            <EditTemplate >
+                                <MudIconButton OnClick="@(() => CancelPreferredLocation(@context.Item))" Color="@Color.Default" Icon="@Icons.Material.Outlined.Delete"/>
+                            </EditTemplate>
+                        </TemplateColumn>
+                    </Columns>
+                </MudDataGrid>
+            </MudForm>
         </MudItem>
     </ChildContent>
 </MudExpansionPanel>
@@ -357,6 +419,8 @@
 
 </MudExpansionPanels>
 
+</MudForm>
+
 <MudSpeedDial Origin="Origin.BottomRight"
               Style="position:fixed; z-index: 100"
               Padding="10"
@@ -368,16 +432,16 @@
         <MudFab Size="Size.Small" IconSize="Size.Small" Icon="@Icons.Material.Outlined.Cancel" Color="Color.Tertiary"/>
     </MudTooltip>
 </MudSpeedDial>
-</MudForm>
 
 
 @code {
 
         public const string PageUrl = "/candidate-profile/create";
         public const string PageUrl2 = "/candidate-profile/edit";
+
     MudForm form;
-    private HashSet<CandidateSpokenLanguageDto> CheckedCandidateSpokenLanguages = new();
-    private HashSet<CandidatePreferredLocation> CheckedCandidatePreferredLocations = new();
+    private CandidateDtoFluentValidator candidateDtoFluentValidator = new();
+    private CandidatePreferredLocationDtoValidator candidatePreferredLocationDtoValidator = new();
 
 
     private Dictionary<string, object> editorConf = new Dictionary<string, object>
@@ -385,89 +449,11 @@
         { "paste_block_drop", true } //Disable paste images
     };
 
-    private IEnumerable<string> MobileValidation(string pn)
-    {
-        if (string.IsNullOrWhiteSpace(pn))
-        {
-            yield return "Mobile number is required!";
-            yield break;
-        }
-        if (pn.StartsWith("+") == false && pn.StartsWith("00") == false)
-        {
-            yield return "Mobile number must start with + or 00";
-        }
-        if (pn.Length < 5)
-        {
-            yield return "Mobile number is too short";
-        }
-        if (Regex.IsMatch(pn, @"[A-Za-z]"))
-            yield return "Mobile number must contain only numbers";
-    }
-
-    private void AddPreferredLocation()
-    {
-        CandidatePreferredLocations.Add(new CandidatePreferredLocationDto()
-        {
-            FeId = Guid.NewGuid().ToString(),
-        });
-    }
-
-    private async Task AddSpokenLanguage()
-    {
-        CandidateSpokenLanguages.Add(new CandidateSpokenLanguageDto()
-        {
-            FeId = Guid.NewGuid().ToString(),
-        });
-    }
-
-    private void CancelPreferredLocation(CandidatePreferredLocationDto item)
-    {
-        CandidatePreferredLocations = CandidatePreferredLocations
-            .Where(x => x.FeId != item.FeId).ToList();
-    }
-
-    private void CancelSpokenLanguage(CandidateSpokenLanguageDto item)
-    {
-        CandidateSpokenLanguages = CandidateSpokenLanguages
-            .Where(x => x.FeId != item.FeId).ToList();
-    }
-
     private async Task<IEnumerable<Country?>> CountrySearchFunc(string arg)
     {
         if (string.IsNullOrEmpty(arg))
             return _countriesNullable;
         return _countriesNullable.Where(x => x!.ToString().StartsWith(arg, StringComparison.InvariantCultureIgnoreCase)).ToList();
-    }
-
-    private async Task<IEnumerable<string>> LanguagesSearchFunc(string arg)
-    {
-        if (string.IsNullOrEmpty(arg))
-            return _languages.Select(x => x.Name);
-
-        return _languages
-            .Where(x => x.Name.ToString().StartsWith(arg, StringComparison.InvariantCultureIgnoreCase))
-            .Select(x => x.Name)
-            .ToList();
-    }
-
-    private IEnumerable<string> ValidateCountry(string value)
-    {
-        if (string.IsNullOrWhiteSpace(value))
-        {
-            yield return "The Country field is required";
-            yield break;
-        }
-
-        if (!_countriesNullable.Any(x => x.ToString().Equals(value, StringComparison.InvariantCultureIgnoreCase)))
-        {
-            yield return "Incorrect Country";
-        }
-    }
-
-    private Task ToggleJobFunctionClip(JobFunctionChip item)
-    {
-        item.IsSelected = !item.IsSelected;
-        return Task.CompletedTask;
     }
 
 }

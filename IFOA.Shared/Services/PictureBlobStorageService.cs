@@ -41,6 +41,15 @@ public class PictureBlobStorageService
         return blobClient;
     }
     
+    //upload picture as stream
+    public async Task<BlobClient> UploadPictureAsync(Stream stream, string fileName)
+    {
+        var containerClient = await CreateContainerIfNotExistAsync(ContainerName);
+        var blobClient = containerClient.GetBlobClient(fileName);
+        await blobClient.UploadAsync(stream, true);
+        return blobClient;
+    }
+    
     private async Task<BlobContainerClient> CreateContainerIfNotExistAsync(string containerName)
     {
         var containerClient = _blobServiceClient.GetBlobContainerClient(containerName);

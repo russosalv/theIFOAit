@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="CodeBeam.MudBlazor.Extensions" Version="6.5.0.2" />
+    <PackageReference Include="FluentValidation" Version="11.5.2" />
     <PackageReference Include="Microsoft.Azure.SignalR" Version="1.21.3" />
     <PackageReference Include="MudBlazor" Version="6.4.1" />
     <PackageReference Include="TinyMCE.Blazor" Version="1.0.4" />
@@ -26,6 +27,10 @@
     <Compile Update="Pages\Candidate\EditProfile.razor.cs">
       <DependentUpon>EditProfile.razor</DependentUpon>
     </Compile>
+    <Compile Update="Pages\Candidate\EditProfile.min.razor.cs">
+      <DependentUpon>EditProfile.razor</DependentUpon>
+    </Compile>
   </ItemGroup>
+
 
 </Project>

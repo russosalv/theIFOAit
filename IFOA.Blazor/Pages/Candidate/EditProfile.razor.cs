@@ -1,9 +1,11 @@
 using System.Diagnostics;
+using Azure.Storage.Sas;
 using IFOA.Blazor.Common;
 using IFOA.Blazor.Helpers;
 using IFOA.DB.Entities;
 using IFOA.Shared;
 using IFOA.Shared.Dtos;
+using IFOA.Shared.Services;
 using ISOLib.ISO;
 using ISOLib.Model;
 using Microsoft.AspNetCore.Components;
@@ -16,20 +18,15 @@ namespace IFOA.Blazor.Pages.Candidate;
 public partial class EditProfile : DbPage
 {
     [Parameter] public Guid? Id { get; set; }
+    [Inject] NavigationManager Navigation { get; set; }
+    [Inject] PictureBlobStorageService PictureBlobStorageService { get; set; } = null!;
+
     CandidateDto CandidateDto = new();
-    List<CandidateSpokenLanguageDto> CandidateSpokenLanguages = new List<CandidateSpokenLanguageDto>();
-    List<CandidatePreferredLocationDto> CandidatePreferredLocations = new List<CandidatePreferredLocationDto>();
 
     List<Country?> _countriesNullable = new List<Country?>();
     List<Language> _languages = new List<Language>();
-    List<JobFunction> _jobFunctions = new List<JobFunction>();
     List<JobFunctionChip> _jobFunctionChips = new List<JobFunctionChip>();
 
-    IEnumerable<Language> _selectedLanguages = new List<Language>();
-    IEnumerable<JobFunction> _selectedJobFunctions = new List<JobFunction>();
-    IEnumerable<Country?> _selectedCountry = new List<Country?>();
-
-    [Inject] NavigationManager Navigation { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -52,11 +49,11 @@ public partial class EditProfile : DbPage
         if (dbData is not null)
         {
             CandidateDto = (CandidateDto)dbData;
-            CandidateSpokenLanguages =
+            CandidateDto.CandidateSpokenLanguages =
                 dbData.CandidateSpokenLanguages
                     .Select(x => (CandidateSpokenLanguageDto)x).ToList();
 
-            CandidatePreferredLocations = dbData.CandidatePreferredLocations
+            CandidateDto.CandidatePreferredLocations = dbData.CandidatePreferredLocations
                 .Select(x => (CandidatePreferredLocationDto)x).ToList();
         }
 
@@ -83,14 +80,79 @@ public partial class EditProfile : DbPage
             return;
 
         await using var _context = await DbContextFactory.CreateDbContextAsync();
-        var dbData = await _context?.Candidates.AsNoTracking().FirstOrDefaultAsync(x => x.Id == CandidateDto.Id)!;
+        var dbData = await
+            _context?.Candidates
+                .Include(x => x.CandidatePreferredLocations)
+                .Include(x => x.CandidateSpokenLanguages)
+                .Include(x => x.CandidatePreferredJobFunctions)
+                .AsSingleQuery()
+                .FirstOrDefaultAsync(x => x.Id == CandidateDto.Id)!;
+
         if (dbData is null)
         {
-            _context?.Candidates.Add((DB.Entities.Candidate)CandidateDto);
+            var newCandidate = (DB.Entities.Candidate)CandidateDto;
+            newCandidate.CandidatePreferredLocations = CandidateDto.CandidatePreferredLocations
+                .Select(x => (DB.Entities.CandidatePreferredLocation)x).ToList();
+            newCandidate.CandidateSpokenLanguages = CandidateDto.CandidateSpokenLanguages
+                .Select(x => (DB.Entities.CandidateSpokenLanguage)x).ToList();
+            newCandidate.CandidatePreferredJobFunctions = _jobFunctionChips.Where(x => x.IsSelected).Select(x =>
+                new CandidatePreferredJobFunction()
+                {
+                    JobFunctionId = x.JobFunction.Id,
+                    CandidateId = newCandidate.Id
+                }).ToList();
+
+            dbData = newCandidate;
+
+            _context?.Candidates.Add(dbData);
         }
         else
         {
-            _context?.Candidates.Update((DB.Entities.Candidate)CandidateDto);
+            dbData.Gender = CandidateDto.Gender;
+            dbData.Name = CandidateDto.Name;
+            dbData.Surname = CandidateDto.Surname;
+            dbData.BirthDate = CandidateDto.BirthDate;
+            dbData.Nationality = CandidateDto.Nationality ?? Country.NotSet;
+            dbData.Email = CandidateDto.Email;
+            dbData.PhoneNumber = CandidateDto.PhoneNumber;
+            dbData.ResidenceCountry = CandidateDto.ResidenceCountry ?? Country.NotSet;
+            dbData.Address = CandidateDto.Address;
+            dbData.City = CandidateDto.City;
+            dbData.ZipCode = CandidateDto.ZipCode;
+            dbData.CoverLetter = CandidateDto.CoverLetter;
+            dbData.Biography = CandidateDto.Biography;
+
+            dbData.CandidatePreferredLocations.Clear();
+            dbData.CandidatePreferredLocations =
+                CandidateDto?.CandidatePreferredLocations?.Select(x => (DB.Entities.CandidatePreferredLocation)x)
+                    ?.ToList() ?? new List<DB.Entities.CandidatePreferredLocation>();
+
+            dbData.CandidateSpokenLanguages.Clear();
+            dbData.CandidateSpokenLanguages = CandidateDto?.CandidateSpokenLanguages?
+                .Select(x => (DB.Entities.CandidateSpokenLanguage)x)?.ToList() ?? new List<CandidateSpokenLanguage>();
+
+            dbData.CandidatePreferredJobFunctions.Clear();
+            dbData.CandidatePreferredJobFunctions = _jobFunctionChips.Where(x => x.IsSelected).Select(x =>
+                new CandidatePreferredJobFunction()
+                {
+                    JobFunctionId = x.JobFunction.Id,
+                    CandidateId = dbData.Id
+                }).ToList();
+
+            _context?.Candidates.Update(dbData);
+        }
+
+        //Save images
+        if (CandidateDto?.IsImageFileChanged == true && dbData is not null && CandidateDto.ImageFile is not null)
+        {
+            var image = CandidateDto?.ImageFile?.OpenReadStream(IfoaConfigurationKeys.MaxImageSize);
+            if (image is not null)
+            {
+                var blobClient =
+                    await PictureBlobStorageService.UploadPictureAsync(image,
+                        $"{CandidateDto!.Id}-{CandidateDto!.ImageFile!.Name}");
+                dbData.ImageLink = blobClient.Uri.ToString();
+            }
         }
 
         await _context?.SaveChangesAsync(CancellationToken.None)!;
@@ -105,9 +167,11 @@ public partial class EditProfile : DbPage
         public Color Color => IsSelected ? Color.Primary : Color.Dark;
 
         public string Icon =>
-            IsSelected ? Icons.Material.Filled.Check : GraphicHelpers.GetMudIconByName(
-                JobFunction.Icon,
-                Icons.Material.Filled.NotInterested,
-                includeRounded: true);
+            IsSelected
+                ? Icons.Material.Filled.Check
+                : GraphicHelpers.GetMudIconByName(
+                    JobFunction.Icon,
+                    Icons.Material.Filled.NotInterested,
+                    includeRounded: true);
     }
 }
