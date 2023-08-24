@@ -1,0 +1,93 @@
+@attribute [Route(Experiences.PageUrl)]
+@inherits IFOA.Blazor.Common.DbPage
+@using IFOA.DB.Entities
+@using IFOA.Shared.Dtos
+
+<style>
+    .mud-toolbar.mud-toolbar-gutters.mud-table-toolbar {
+        flex-direction: row-reverse;
+    }
+    
+    .mud-dialog-width-sm {
+        max-width: 800px;
+        width: 800px;
+    }
+</style>
+
+<MudDataGrid T="CandidateExperienceDto"
+             EditMode="DataGridEditMode.Form"
+             Items="@CandidateExperiences"
+             EditTrigger="DataGridEditTrigger.Manual"
+             ReadOnly="false">
+
+    <ToolBarContent >
+
+        <MudButton
+            Variant="Variant.Outlined"
+            Color="Color.Tertiary"
+            StartIcon="@Icons.Material.Filled.Add"
+            Size="Size.Small"
+            OnClick="AddExperience">
+            Add Experience
+        </MudButton>
+
+    </ToolBarContent>
+
+    <Columns>
+        <PropertyColumn Property="x => x.FromDate" Format="dd-MM-yyyy" Title="From Date">
+            <EditTemplate>
+                <MudDatePicker Label="From Date"
+                               Date="context.Item.FromDate"
+                               DisableToolbar="true"
+                               MinDate="DateTime.Now.AddYears(-70)"
+                               MaxDate="DateTime.Today"
+                               DateChanged="@((data) => { if (data.HasValue) context.Item.FromDate = data.Value; })"/>
+            </EditTemplate>
+        </PropertyColumn>
+
+        <PropertyColumn Property="x => x.ToDate" Format="dd-MM-yyyy" Title="To Date ">
+            <EditTemplate>
+                <MudDatePicker Label="To Date"
+                               Date="context.Item.ToDate"
+                               DisableToolbar="true"
+                               MinDate="context.Item.FromDate"
+                               MaxDate="DateTime.Today"
+                               DateChanged="@((data) => { if (data.HasValue) context.Item.ToDate = data.Value; })"/>
+            </EditTemplate>
+        </PropertyColumn>
+
+        <PropertyColumn Property="x => x.CompanyName" Title="Company Name"></PropertyColumn>
+
+        <PropertyColumn Property="x => x.JobTitle" Title="Job Title">
+            <EditTemplate>
+                <MudTextField T="string" MaxLength="25"
+                              Label="Job Title"
+                              @bind-Text="@context.Item.JobTitle"/>
+            </EditTemplate>
+        </PropertyColumn>
+
+        <PropertyColumn Property="x => x.Description" >
+            <EditTemplate>
+                <MudTextField
+                    T="string"
+                    Label="Description"
+                    Variant="Variant.Text"
+                    @bind-Text="@context.Item.Description"
+                    Lines="8"
+                    MaxLength="1500"/>
+            </EditTemplate>
+        </PropertyColumn>
+
+        <TemplateColumn CellClass="d-flex justify-end">
+            <CellTemplate>
+                <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@context.Actions.StartEditingItemAsync"/>
+            </CellTemplate>
+        </TemplateColumn>
+
+    </Columns>
+
+</MudDataGrid>
+
+@code {
+        public const string PageUrl = "/candidate-profile/experiences";
+}

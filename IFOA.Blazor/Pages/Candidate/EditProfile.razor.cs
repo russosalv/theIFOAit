@@ -46,6 +46,7 @@ public partial class EditProfile : DbPage
             .Include(x => x.CandidatePreferredLocations)
             .AsSplitQuery()
             .FirstOrDefaultAsync(x => x.Id == Id);
+        
         if (dbData is not null)
         {
             CandidateDto = (CandidateDto)dbData;
@@ -85,7 +86,7 @@ public partial class EditProfile : DbPage
                 .Include(x => x.CandidatePreferredLocations)
                 .Include(x => x.CandidateSpokenLanguages)
                 .Include(x => x.CandidatePreferredJobFunctions)
-                .AsSingleQuery()
+                .AsSplitQuery()
                 .FirstOrDefaultAsync(x => x.Id == CandidateDto.Id)!;
 
         if (dbData is null)

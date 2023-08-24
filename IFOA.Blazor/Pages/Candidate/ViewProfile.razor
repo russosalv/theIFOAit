@@ -12,7 +12,14 @@
     <MudItem lg="4" xs="12">
 
         <MudCard Style="height: 330px">
-            <MudCardMedia Image="@Candidate.ImageLink" Height="200"/>
+            @if(string.IsNullOrEmpty(Candidate.ImageLink) == false)
+            {
+                <MudCardMedia Image="@Candidate.ImageLink" Height="200" Style="background-position: center; background-size: contain;" />
+            }
+            else
+            {
+                <MudCardMedia Image="images/noImage.png" Height="200" Style="background-position: center; background-size: contain;"/>
+            }
             <MudCardContent>
                 <MudText Typo="Typo.h5">@($"{Candidate.Name} {Candidate.Surname}")</MudText>
                 <MudText Typo="Typo.body2">ToDo</MudText>
