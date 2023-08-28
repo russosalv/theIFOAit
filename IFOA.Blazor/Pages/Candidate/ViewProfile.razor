@@ -3,9 +3,11 @@
 @using IFOA.Shared.Dtos
 @using IFOA.Shared.Enums
 @inherits IFOA.Blazor.Common.DbPage
+@using IFOA.Blazor.Components.General
 
+<IFOALoading Loading="@Loading"></IFOALoading>
 
-<MudFab Style="position:fixed; bottom:15px; right:15px; z-index: 100" Color=@Color.Secondary Icon=@Icons.Material.Filled.Edit/>
+<MudFab Style="position:fixed; bottom:15px; right:15px; z-index: 100" Color=@Color.Secondary Icon=@Icons.Material.Filled.Edit Href="@EditProfile.PageUrl2"/>
 
 <MudGrid>
     <!-- Drawer -->
@@ -22,7 +24,7 @@
             }
             <MudCardContent>
                 <MudText Typo="Typo.h5">@($"{Candidate.Name} {Candidate.Surname}")</MudText>
-                <MudText Typo="Typo.body2">ToDo</MudText>
+                @* <MudText Typo="Typo.body2">@Candidate.Biography</MudText> *@
                 <MudText Typo="Typo.body2">@Candidate.Biography</MudText>
                 <MudRating ReadOnly="true" SelectedValue="@Candidate.Ranking"/>
             </MudCardContent>
@@ -93,7 +95,7 @@
     </MudItem>
 
     <!-- Carrer Timeline -->
-    <IFOACareerTimeLine CareerTimeLineData="@_careerTimeLineDatas"/>s
+    <IFOACareerTimeLine CareerTimeLineData="@_careerTimeLineDatas"/>
 
 
 </MudGrid>

@@ -38,6 +38,11 @@ public partial class EditProfile : DbPage
         ISO<Language> iso639 = new ISO639();
         _languages = iso639.GetArray().ToList();
 
+        // await LoadData();
+    }
+
+    private async Task LoadData()
+    {
         await using var _context = await DbContextFactory.CreateDbContextAsync();
         var dbData = await _context.Candidates.AsNoTracking()
             .Include(x => x.CandidateSpokenLanguages)
@@ -46,7 +51,7 @@ public partial class EditProfile : DbPage
             .Include(x => x.CandidatePreferredLocations)
             .AsSplitQuery()
             .FirstOrDefaultAsync(x => x.Id == Id);
-        
+
         if (dbData is not null)
         {
             CandidateDto = (CandidateDto)dbData;
@@ -71,10 +76,20 @@ public partial class EditProfile : DbPage
                 IsSelected = isSelected
             });
         }
+
+        EndLoading();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender)
+            await LoadData();
     }
 
     private async Task SaveData()
     {
+        StartLoading();
+        
         await form.Validate();
 
         if (form.IsValid is false)
@@ -158,6 +173,8 @@ public partial class EditProfile : DbPage
 
         await _context?.SaveChangesAsync(CancellationToken.None)!;
         Navigation.NavigateTo($"{ViewProfile.PageUrl}/{CandidateDto.Id}");
+        
+        EndLoading();
     }
 
     public class JobFunctionChip

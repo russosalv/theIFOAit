@@ -13,7 +13,6 @@ public partial class ViewProfile : DbPage
     // [Inject] public PictureBlobStorageService PictureBlobStorageService { get; set; }
     [Inject] public NavigationManager Navigation { get; set; }
     [Inject] public PictureBlobStorageService PictureBlobStorageService { get; set; } = null!;
-    private bool Busy = true;
     
     public string ImageBase64 { get; set; } = string.Empty;
     
@@ -46,7 +45,6 @@ public partial class ViewProfile : DbPage
             // Navigation.NavigateTo(EditProfile.PageUrl);
         }
 
-        Busy = false;
-        StateHasChanged();
+        EndLoading();
     }
 }

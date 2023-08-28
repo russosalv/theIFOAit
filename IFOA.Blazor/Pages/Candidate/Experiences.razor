@@ -2,6 +2,7 @@
 @inherits IFOA.Blazor.Common.DbPage
 @using IFOA.DB.Entities
 @using IFOA.Shared.Dtos
+@using IFOA.Blazor.Components.General
 
 <style>
     .mud-toolbar.mud-toolbar-gutters.mud-table-toolbar {
@@ -13,6 +14,8 @@
         width: 800px;
     }
 </style>
+
+<IFOALoading Loading="@Loading"></IFOALoading>
 
 <MudDataGrid T="CandidateExperienceDto"
              EditMode="DataGridEditMode.Form"

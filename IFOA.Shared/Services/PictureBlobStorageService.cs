@@ -14,14 +14,14 @@ public class PictureBlobStorageService
         
         var pictureBlobStorageConnectionString = configuration.TryGetConfigurationValue(IfoaConfigurationKeys.PictureBlobStorageConnectionString);
 
-        if (Debugger.IsAttached)
-        {
+        // if (Debugger.IsAttached)
+        // {
             if (string.IsNullOrEmpty(pictureBlobStorageConnectionString))
             {
                 // set pictureBlobStorageConnectionString as local storage emulator
                 pictureBlobStorageConnectionString = "DefaultEndpointsProtocol=https;AccountName=stifoa;AccountKey=XSyBPPS04YbrZ0Fdo93jbc1PiCPqt98gCEgX/NjxnJHDZQr9DkrKQpFCBBKJw1uBmGGlSPXSG9FS+AStqPSAKA==;EndpointSuffix=core.windows.net";
             }
-        }
+        // }
         
         if (string.IsNullOrEmpty(pictureBlobStorageConnectionString))
         {

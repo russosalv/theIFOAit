@@ -1,14 +1,12 @@
 @attribute [Route(EditProfile.PageUrl)]
 @attribute [Route(EditProfile.PageUrl2 + "/{Id:guid?}")]
 @using System.ComponentModel.DataAnnotations
-@using System.Text.RegularExpressions
-@using FluentValidation
 @using IFOA.DB.Entities
 @using IFOA.Shared
 @using IFOA.Shared.Dtos
-@using ISOLib.Model
 @using Country = Netizine.Enums.Country
 @inherits IFOA.Blazor.Common.DbPage
+@using IFOA.Blazor.Components.General
 
 <style>
     @@media (max-width: 600px) {
@@ -33,7 +31,18 @@
     /*}*/
 </style>
 
-<MudText Typo="Typo.h3" Align="Align.Center" GutterBottom="true">Create your profile</MudText>
+<IFOALoading Loading="@Loading"></IFOALoading>
+
+
+@if (Id is null || Id == Guid.Empty)
+{
+    <MudText Typo="Typo.h3" Align="Align.Center" GutterBottom="true"> Create your profile</MudText>
+}
+else
+{
+    <MudText Typo="Typo.h3" Align="Align.Center" GutterBottom="true"> Edit your profile</MudText>
+}
+
 
 <MudForm @ref="@form" Model="@CandidateDto" Validation="@(candidateDtoFluentValidator.ValidateValue)" ValidationDelay="0">
 <MudExpansionPanels MultiExpansion="true">
@@ -50,14 +59,14 @@
     </TitleContent>
     <ChildContent>
         <MudGrid>
-            
+
             @if (string.IsNullOrEmpty(CandidateDto.ImageLink) == false)
             {
                 <MudItem sm="12">
                     <MudImage Src="@CandidateDto.ImageLink" Elevation="25" Class="rounded-lg" Width="200" ObjectFit="ObjectFit.ScaleDown"/>
                 </MudItem>
             }
-            else if(CandidateDto.IsImageFileChanged == false)
+            else if (CandidateDto.IsImageFileChanged == false)
             {
                 <MudItem sm="12">
                     <MudImage Src="images/noImage.png" Elevation="25" Class="rounded-lg" Width="200" ObjectFit="ObjectFit.ScaleDown"/>
@@ -143,7 +152,7 @@
                                Required="true"
                                RequiredError="Date of Birth is required!"/>
             </MudItem>
-            
+
         </MudGrid>
     </ChildContent>
 </MudExpansionPanel>
