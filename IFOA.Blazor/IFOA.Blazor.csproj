@@ -8,17 +8,21 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="CodeBeam.MudBlazor.Extensions" Version="6.5.0.2"/>
-        <PackageReference Include="FluentValidation" Version="11.5.2"/>
-        <PackageReference Include="Microsoft.Azure.SignalR" Version="1.21.3"/>
-        <PackageReference Include="MudBlazor" Version="6.4.1"/>
-        <PackageReference Include="TinyMCE.Blazor" Version="1.0.4"/>
+        <PackageReference Include="CodeBeam.MudBlazor.Extensions" Version="6.5.0.2" />
+        <PackageReference Include="FluentValidation" Version="11.5.2" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.5" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.5" />
+        <PackageReference Include="Microsoft.Azure.SignalR" Version="1.21.3" />
+        <PackageReference Include="Microsoft.Identity.Web" Version="1.24.1" />
+        <PackageReference Include="Microsoft.Identity.Web.UI" Version="1.16.0" />
+        <PackageReference Include="MudBlazor" Version="6.4.1" />
+        <PackageReference Include="TinyMCE.Blazor" Version="1.0.4" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\IFOA.DB\IFOA.DB.csproj"/>
-        <ProjectReference Include="..\IFOA.Exceptions\IFOA.Exceptions.csproj"/>
-        <ProjectReference Include="..\IFOA.Shared\IFOA.Shared.csproj"/>
+        <ProjectReference Include="..\IFOA.DB\IFOA.DB.csproj" />
+        <ProjectReference Include="..\IFOA.Exceptions\IFOA.Exceptions.csproj" />
+        <ProjectReference Include="..\IFOA.Shared\IFOA.Shared.csproj" />
     </ItemGroup>
 
     <ItemGroup>
