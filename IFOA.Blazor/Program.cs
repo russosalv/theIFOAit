@@ -45,7 +45,7 @@ builder.Services.AddSingleton<PictureBlobStorageService>();
 
 builder.Services.AddDbContextFactory<IfoaContext>(o =>
 {
-    o.UseSqlServer("Server=localhost;Database=ifoa;User Id=sa;Password=Password!!!!!!;Trusted_Connection=False;Encrypt=False");
+    o.UseSqlServer("Server=localhost;Database=ifoa;User Id=sa;Password=yourStrong@@@@@Password;Trusted_Connection=False;Encrypt=False");
 });
 
 //
