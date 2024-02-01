@@ -44,6 +44,7 @@
         <None Update="Pages\Candidate\Experiences.razor.css">
             <DependentUpon>Experiences.razor</DependentUpon>
         </None>
+        <None Include="global.json" />
     </ItemGroup>
 
 

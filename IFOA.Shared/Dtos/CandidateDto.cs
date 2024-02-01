@@ -1,6 +1,7 @@
 using IFOA.DB.Entities;
-using Microsoft.AspNetCore.Components.Forms;
 using Netizine.Enums;
+using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace IFOA.Shared.Dtos;
 
@@ -22,7 +23,7 @@ public class CandidateDto
     public string? ImageLink { get; set; }
     public string? CoverLetter { get; set; } = string.Empty;
     public string? Biography { get; set; }
-
+    
     public IBrowserFile? ImageFile { get; set; } = null!;
     public bool IsImageFileChanged { get; set; } = false;
 
