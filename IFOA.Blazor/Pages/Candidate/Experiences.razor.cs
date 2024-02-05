@@ -2,40 +2,82 @@ using IFOA.Blazor.Common;
 using IFOA.DB.Entities;
 using IFOA.Shared.Dtos;
 using Microsoft.AspNetCore.Components;
+using Microsoft.EntityFrameworkCore;
 
 namespace IFOA.Blazor.Pages.Candidate;
 
 public partial class Experiences : DbPage
 {
-    public List<CandidateExperienceDto> CandidateExperiences = new();
     [Parameter] public Guid? Id { get; set; }
-    private DB.Entities.Candidate? Candidate { get; set; }
+    
+    public List<CandidateExperienceDto> CandidateExperiences = new();
 
-    protected override Task OnInitializedAsync()
-    {
-        return base.OnInitializedAsync();
-    }
+    private List<DB.Entities.CandidateExperience>? CandidateExperience { get; set; }
 
-    protected override Task OnAfterRenderAsync(bool firstRender)
+    private async Task LoadData()
     {
-        if (!firstRender) return base.OnAfterRenderAsync(firstRender);
         
-        using var context = DbContextFactory.CreateDbContext();
-        var candidate = context.Candidates.FirstOrDefault(x => x.Id == Id);
-        if (candidate is not null)
+        await using var _context =await DbContextFactory.CreateDbContextAsync();
+        var dbData = await _context.CandidateExperience.AsNoTracking()
+            .Where(a =>  a.CandidateId == Id)
+            .ToListAsync();
+        
+        if (dbData is not null)
         {
-            Candidate = candidate;
             CandidateExperiences =
-                candidate?.CandidateExperiences.ToList()?.Select(x => (CandidateExperienceDto)x).ToList() ?? new();
+                dbData.Select(x => (CandidateExperienceDto)x).ToList();
         }
-
-        return base.OnAfterRenderAsync(firstRender);
+        
+        EndLoading();
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await LoadData();
+        }
     }
 
     private async Task AddExperience()
     {
         CandidateExperiences.Add(new CandidateExperienceDto()
         {
+            IsNewExperience = true
         });
     }
+
+    private async void OnCommittedItemChanges()
+    {
+        StartLoading();
+        await using var _context =await DbContextFactory.CreateDbContextAsync();
+        var dbData = await _context.CandidateExperience.AsNoTracking()
+            .Where(a =>  a.CandidateId == Id)
+            .ToListAsync();
+        
+        var toBeUpdated = CandidateExperiences.Where(a => !a.IsNewExperience).ToList();
+        foreach (var experience in toBeUpdated)
+        {
+            var existingExperience = dbData.FirstOrDefault(x => x.Id == experience.Id);
+            if (existingExperience != null)
+            {
+                existingExperience.JobTitle = experience.JobTitle;
+                existingExperience.Description = experience.Description;
+                existingExperience.CompanyName = experience.CompanyName;
+                existingExperience.FromDate = experience.FromDate;
+                existingExperience.ToDate = experience.ToDate;
+                _context.Entry(existingExperience).State = EntityState.Modified;
+            }
+        }
+        var toBeAdded = CandidateExperiences.Where(a => a.IsNewExperience)
+            .Select(CandidateExperienceDto.ToCandidateExperience)
+            .ToList();
+        _context.CandidateExperience.AddRange(toBeAdded);
+
+        await _context.SaveChangesAsync();
+        EndLoading();
+    }
+    
+    
+    
+            
 }
