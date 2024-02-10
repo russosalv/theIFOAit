@@ -19,7 +19,9 @@
 
 @if (Id is null || Id == Guid.Empty)
 {
-    <MudText Typo="Typo.h3" Align="Align.Center" GutterBottom="true"> Set your profile first</MudText>
+    <MudText Typo="Typo.h3" Align="Align.Center" GutterBottom="true"> Set your 
+        <MudLink Href="#" Typo="Typo.h3" Align="Align.Center" GutterBottom="true" OnClick="OnProfileClicked" Underline="Underline.Always">profile</MudLink> 
+        first</MudText>
 }
 else
 {
@@ -117,7 +119,7 @@ else
 
 
 @code {
-    public const string PageUrl = "/candidate-profile/experiences";
+    public const string PageUrl = "/experiences";
     MudForm form;
 
 

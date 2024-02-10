@@ -3,13 +3,15 @@ using IFOA.DB.Entities;
 using IFOA.Shared.Dtos;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace IFOA.Blazor.Pages.Candidate;
 
 public partial class Experiences : DbPage
 {
     [Parameter] public Guid? Id { get; set; }
-
+    [Inject] NavigationManager Navigation { get; set; }
+    
     public List<CandidateExperienceDto> CandidateExperiences = new();
 
     private List<DB.Entities.CandidateExperience>? CandidateExperience { get; set; }
@@ -60,5 +62,10 @@ public partial class Experiences : DbPage
 
         await _context.SaveChangesAsync();
         EndLoading();
+    }
+
+    private async void OnProfileClicked()
+    {
+        Navigation.NavigateTo($"{ViewProfile.PageUrl}");
     }
 }
