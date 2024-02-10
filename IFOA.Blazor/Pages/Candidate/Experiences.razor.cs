@@ -9,27 +9,26 @@ namespace IFOA.Blazor.Pages.Candidate;
 public partial class Experiences : DbPage
 {
     [Parameter] public Guid? Id { get; set; }
-    
+
     public List<CandidateExperienceDto> CandidateExperiences = new();
 
     private List<DB.Entities.CandidateExperience>? CandidateExperience { get; set; }
 
     private async Task LoadData()
     {
-        
-        await using var _context =await DbContextFactory.CreateDbContextAsync();
-        var dbData = await _context.CandidateExperience.AsNoTracking()
-            .Where(a =>  a.CandidateId == Id)
-            .ToListAsync();
-        
+        await using var _context = await DbContextFactory.CreateDbContextAsync();
+        var dbData = await _context.Candidates.AsNoTracking().Include(x => x.CandidateExperiences)
+            .FirstOrDefaultAsync(a => a.Id == Id);
+
         if (dbData is not null)
         {
             CandidateExperiences =
-                dbData.Select(x => (CandidateExperienceDto)x).ToList();
+                dbData.CandidateExperiences.Select(x => (CandidateExperienceDto)x).ToList();
         }
-        
+
         EndLoading();
     }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -40,44 +39,26 @@ public partial class Experiences : DbPage
 
     private async Task AddExperience()
     {
-        CandidateExperiences.Add(new CandidateExperienceDto()
-        {
-            IsNewExperience = true
-        });
+        CandidateExperiences.Add(new CandidateExperienceDto());
     }
 
     private async void OnCommittedItemChanges()
     {
         StartLoading();
-        await using var _context =await DbContextFactory.CreateDbContextAsync();
-        var dbData = await _context.CandidateExperience.AsNoTracking()
-            .Where(a =>  a.CandidateId == Id)
-            .ToListAsync();
-        
-        var toBeUpdated = CandidateExperiences.Where(a => !a.IsNewExperience).ToList();
-        foreach (var experience in toBeUpdated)
+        await using var _context = await DbContextFactory.CreateDbContextAsync();
+        var dbData = await _context.Candidates
+            .Include(x => x.CandidateExperiences)
+            .FirstOrDefaultAsync(a => a.Id == Id);
+
+        if (dbData is not null)
         {
-            var existingExperience = dbData.FirstOrDefault(x => x.Id == experience.Id);
-            if (existingExperience != null)
-            {
-                existingExperience.JobTitle = experience.JobTitle;
-                existingExperience.Description = experience.Description;
-                existingExperience.CompanyName = experience.CompanyName;
-                existingExperience.FromDate = experience.FromDate;
-                existingExperience.ToDate = experience.ToDate;
-                _context.Entry(existingExperience).State = EntityState.Modified;
-            }
+            dbData.CandidateExperiences.Clear();
+            dbData.CandidateExperiences = CandidateExperiences
+                .Select(x => (DB.Entities.CandidateExperience)x)
+                .ToList();
         }
-        var toBeAdded = CandidateExperiences.Where(a => a.IsNewExperience)
-            .Select(CandidateExperienceDto.ToCandidateExperience)
-            .ToList();
-        _context.CandidateExperience.AddRange(toBeAdded);
 
         await _context.SaveChangesAsync();
         EndLoading();
     }
-    
-    
-    
-            
 }

@@ -2,16 +2,25 @@ using IFOA.DB.Entities;
 
 namespace IFOA.Shared.Dtos;
 
-public class CandidateExperienceDto : CandidateExperience
+public class CandidateExperienceDto : FeEntity
 {
-    public string ShortDescription => (Description is not null && Description?.Length > 50) ? Description.Substring(0, 50) + "..." : Description;
-    public Boolean IsNewExperience { get; set; } = false;
+    public int Id { get; set; }
+    public Guid CandidateId { get; set; }
+    public string Description { get; set; }
+    public string CompanyName { get; set; }
+    public DateTime FromDate { get; set; } = DateTime.Today;
+    public string JobTitle { get; set; }
+    public DateTime? ToDate { get; set; }
 
-    public static CandidateExperienceDto FromCandidateExperience(CandidateExperience x)
+
+    public string ShortDescription => (Description is not null && Description?.Length > 50)
+        ? Description.Substring(0, 50) + "..."
+        : Description;
+
+    public static explicit operator  CandidateExperienceDto(CandidateExperience x)
     {
         return new CandidateExperienceDto()
         {
-            Candidate = x.Candidate,
             CandidateId = x.CandidateId,
             Description = x.Description,
             Id = x.Id,
@@ -21,12 +30,11 @@ public class CandidateExperienceDto : CandidateExperience
             ToDate = x.ToDate
         };
     }
-    
-    public static CandidateExperience ToCandidateExperience(CandidateExperienceDto x)
+
+    public static explicit operator  CandidateExperience(CandidateExperienceDto x)
     {
-        return new CandidateExperienceDto()
+        return new CandidateExperience()
         {
-            Candidate = x.Candidate,
             CandidateId = x.CandidateId,
             Description = x.Description,
             Id = x.Id,
