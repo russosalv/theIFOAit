@@ -8,7 +8,7 @@ public class CandidateCertification
     public string Description { get; set; }
     public string IssuerName { get; set; }
     public string Graduation { get; set; }
-    public DateTime IssuedDate { get; set; }
+    public DateTime IssuedDate { get; set; } = DateTime.Today;
     public DateTime? ExpirationDate { get; set; }
     public string? DocumentLink { get; set; }
 }

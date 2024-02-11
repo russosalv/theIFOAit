@@ -7,23 +7,23 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace IFOA.Blazor.Pages.Candidate;
 
-public partial class Experiences : DbPage
+public partial class Certifications : DbPage
 {
     [Parameter] public Guid? Id { get; set; }
     [Inject] NavigationManager Navigation { get; set; }
-
-    public List<CandidateExperienceDto> CandidateExperiences = new();
+    
+    public List<CandidateCertificationDto> CandidateCertifications= new();
 
     private async Task LoadData()
     {
         await using var _context = await DbContextFactory.CreateDbContextAsync();
-        var dbData = await _context.Candidates.AsNoTracking().Include(x => x.CandidateExperiences)
+        var dbData = await _context.Candidates.AsNoTracking().Include(x => x.CandidateCertifications)
             .FirstOrDefaultAsync(a => a.Id == Id);
 
         if (dbData is not null)
         {
-            CandidateExperiences =
-                dbData.CandidateExperiences.Select(x => (CandidateExperienceDto)x).ToList();
+            CandidateCertifications =
+                dbData.CandidateCertifications.Select(x => (CandidateCertificationDto)x).ToList();
         }
 
         EndLoading();
@@ -37,9 +37,9 @@ public partial class Experiences : DbPage
         }
     }
 
-    private async Task AddExperience()
+    private async Task AddCertification()
     {
-        CandidateExperiences.Add(new CandidateExperienceDto());
+        CandidateCertifications.Add(new CandidateCertificationDto());
     }
 
     private async void OnCommittedItemChanges()
@@ -47,14 +47,14 @@ public partial class Experiences : DbPage
         StartLoading();
         await using var _context = await DbContextFactory.CreateDbContextAsync();
         var dbData = await _context.Candidates
-            .Include(x => x.CandidateExperiences)
+            .Include(x => x.CandidateCertifications)
             .FirstOrDefaultAsync(a => a.Id == Id);
 
         if (dbData is not null)
         {
-            dbData.CandidateExperiences.Clear();
-            dbData.CandidateExperiences = CandidateExperiences
-                .Select(x => (DB.Entities.CandidateExperience)x)
+            dbData.CandidateCertifications.Clear();
+            dbData.CandidateCertifications = CandidateCertifications
+                .Select(x => (DB.Entities.CandidateCertification)x)
                 .ToList();
         }
 
