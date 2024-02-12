@@ -11,7 +11,7 @@ public class CandidateDto
     public GenderEnum Gender { get; set; } = GenderEnum.Male;
     public string Name { get; set; }
     public string Surname { get; set; }
-    public DateTime? BirthDate { get; set; } = DateTime.Now.AddYears(-18);
+    public DateTime? BirthDate { get; set; }
     public Country? Nationality { get; set; }
     public string Email { get; set; }
     public string? PhoneNumber { get; set; }
