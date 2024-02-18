@@ -1,0 +1,126 @@
+@attribute [Route(Projects.PageUrl + "/{Id:guid?}")]
+@inherits IFOA.Blazor.Common.DbPage
+@using IFOA.DB.Entities
+@using IFOA.Shared.Dtos
+@using IFOA.Blazor.Components.General
+
+<style>
+    .mud-toolbar.mud-toolbar-gutters.mud-table-toolbar {
+        flex-direction: row-reverse;
+    }
+    
+    .mud-dialog-width-sm {
+        max-width: 800px;
+        width: 800px;
+    }
+</style>
+
+<IFOALoading Loading="Loading"></IFOALoading>
+
+@if (Id is null || Id == Guid.Empty)
+{
+    <MudText Typo="Typo.h3" Align="Align.Center" GutterBottom="true">
+        Set your
+        <MudLink Href="#" Typo="Typo.h3" Align="Align.Center" GutterBottom="true" OnClick="OnProfileClicked" Underline="Underline.Always">profile</MudLink>
+        first
+    </MudText>
+}
+else
+{
+    <MudText Typo="Typo.h3" Align="Align.Center" GutterBottom="true"> Edit Projects</MudText>
+
+
+    <MudExpansionPanel IsInitiallyExpanded="true" >
+        <TitleContent>
+            <div class="d-flex">
+                <MudIcon Icon="@Icons.Material.Filled.ChecklistRtl" class="mr-3"></MudIcon>
+                <MudText>
+                    <strong>Projects</strong>
+                </MudText>
+            </div>
+        </TitleContent>
+        <ChildContent>
+            <MudItems xs="12">
+                <MudDataGrid T="CandidateProjectsDto"
+                             EditMode="DataGridEditMode.Form"
+                             Items="@CandidateProjects"
+                             EditTrigger="DataGridEditTrigger.Manual"
+                             ReadOnly="false"
+                             Bordered="false" Dense="true"
+                             Class="mt-5 fix-overflow-y"
+                             HorizontalScrollbar="false"
+                             CommittedItemChanges="OnCommittedItemChanges">
+                    <ToolBarContent >
+
+                        <MudButton
+                            Variant="Variant.Outlined"
+                            Color="Color.Tertiary"
+                            StartIcon="@Icons.Material.Filled.Add"
+                            Size="Size.Small"
+                            OnClick="AddProject">
+                            Add Projects
+                        </MudButton>
+
+                    </ToolBarContent>
+
+                    <Columns>
+                        <PropertyColumn Property="x => x.FromDate" Format="dd-MM-yyyy" Title="From Date">
+                            <EditTemplate>
+                                <MudDatePicker Label="From Date"
+                                               Date="context.Item.FromDate"
+                                               DisableToolbar="true"
+                                               MinDate="DateTime.Now.AddYears(-70)"
+                                               MaxDate="DateTime.Today"
+                                               DateChanged="@((data) => { if (data.HasValue) context.Item.FromDate = data.Value; })"/>
+                            </EditTemplate>
+                        </PropertyColumn>
+
+                        <PropertyColumn Property="x => x.ToDate" Format="dd-MM-yyyy" Title="To Date">
+                            <EditTemplate>
+                                <MudDatePicker Label="To Date"
+                                               Date="context.Item.ToDate"
+                                               DisableToolbar="true"
+                                               MinDate="context.Item.ToDate"
+                                               MaxDate="DateTime.Now.AddYears(70)"
+                                               DateChanged="@((data) => { if (data.HasValue) context.Item.ToDate = data.Value; })"/>
+                            </EditTemplate>
+                        </PropertyColumn>
+
+                        <PropertyColumn Property="x => x.CompanyName" Title="Company Name">
+                            <EditTemplate>
+                                <MudTextField T="string" MaxLength="25"
+                                              Label="Company Name"
+                                              @bind-Text="@context.Item.CompanyName"/>
+                            </EditTemplate>
+                        </PropertyColumn>
+
+                        <PropertyColumn Property="x => x.Description">
+                            <EditTemplate>
+                                <MudTextField
+                                    T="string"
+                                    Label="Description"
+                                    Variant="Variant.Text"
+                                    @bind-Text="@context.Item.Description"
+                                    Lines="8"
+                                    MaxLength="1500"/>
+                            </EditTemplate>
+                        </PropertyColumn>
+
+                        <TemplateColumn CellClass="d-flex justify-end">
+                            <CellTemplate>
+                                <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@context.Actions.StartEditingItemAsync"/>
+                            </CellTemplate>
+                        </TemplateColumn>
+                    </Columns>
+                </MudDataGrid>
+            </MudItems>
+        </ChildContent>
+    </MudExpansionPanel>
+}
+
+@code {
+    public const string PageUrl = "/candidate-projects";
+    MudForm form;
+
+
+}

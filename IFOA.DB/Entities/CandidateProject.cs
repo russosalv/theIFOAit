@@ -7,6 +7,6 @@ public class CandidateProject
     public virtual Candidate Candidate { get; set; }
     public string Description { get; set; }
     public string CompanyName { get; set; }
-    public DateTime FromDate { get; set; }
+    public DateTime FromDate { get; set; } = DateTime.Now;
     public DateTime? ToDate { get; set; }
 }
